@@ -65,8 +65,6 @@ public class DKCustomFileSink extends DKWriterSink {
       StringBuilder builder = new StringBuilder();
       String startTimeString = DKRuntime.getInstance().getIsTest() ? "xxx"
               : new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(context_.getDiffStartTime());
-      builder.append(String.format("\"lhs\":\"%s\",", context_.getLhs()));
-      builder.append(String.format("\"rhs\":\"%s\",", context_.getRhs()));
       builder.append(String.format("\"diff_start\":\"%s\",", startTimeString));
       String elapsedTimeString = DKRuntime.getInstance().getIsTest() ? "xxx"
               : context_.getElapsedTimeString();
