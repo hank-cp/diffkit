@@ -15,23 +15,18 @@
  */
 package org.diffkit.diff.custom;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ClassUtils;
 import org.diffkit.common.DKRuntime;
-import org.diffkit.diff.engine.DKColumnModel;
 import org.diffkit.diff.engine.DKContext;
 import org.diffkit.diff.engine.DKSource;
-import org.diffkit.diff.engine.DKTableComparison;
 import org.diffkit.diff.sns.DKDBSource;
 import org.diffkit.diff.sns.DKWriterSink;
-import org.diffkit.util.DKFileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Map;
 
 /**
  * @author jpanico
