@@ -50,13 +50,15 @@ public class DKCustomDBSink extends DKAbstractSink {
     private final DKDBTable _diffTable;
     private transient Connection _connection;
     private final String[][] _displayColumnNames;
+    private final String _diffTableName;
     private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
     private int _consistentCount;
     private int _failedConsistentCount;
+    private Long _previousRowStep;
 
     public DKCustomDBSink(String summaryFilePath_, DKDatabase database_,
-                          DKCustomTableComparison comparison_) throws SQLException {
+                          DKCustomTableComparison comparison_, String diffTableName_) throws SQLException {
         super(null);
         File previousFile = new File(summaryFilePath_);
         if (previousFile.exists()) {
@@ -72,6 +74,7 @@ public class DKCustomDBSink extends DKAbstractSink {
 
         _database = database_;
         _displayColumnNames = comparison_.getDisplayColumnNames();
+        _diffTableName = diffTableName_;
         _tableDataAccess = new DKDBTableDataAccess(_database);
         _diffTable = this.generateDiffTable();
         DKValidate.notNull(_database, _diffTable);
@@ -120,6 +123,13 @@ public class DKCustomDBSink extends DKAbstractSink {
     public void onRowConsistent(DKSource lhs, Object[] lhsData, DKSource rhs, Object[] rhsData) {
         DKDBSource dbSource = (DKDBSource) lhs;
         try {
+            try {
+                Map<String, ?> row = this.createRow(null, lhsData, rhsData, _context);
+                _database.insertRow(row, _diffTable);
+            } catch (SQLException e_) {
+                throw new RuntimeException(e_);
+            }
+
             _consistentCount += 1;
             dbSource.getDatabase().executeUpdate("UPDATE `proc_stock_in_task` SET `STATUS`=3 WHERE `TASK_NUMBER`=" + lhsData[0]);
         } catch (SQLException e) {
@@ -131,10 +141,8 @@ public class DKCustomDBSink extends DKAbstractSink {
     public void record(DKDiff diff_, Object[] lhsData, Object[] rhsData, DKContext context_) throws IOException {
         super.record(diff_, lhsData, rhsData, context_);
         try {
-            diff_.getRowDisplayValues();
-
             Map<String, ?> row = this.createRow(diff_, lhsData, rhsData, context_);
-            _database.insertRow(row, _diffTable);
+            if (row != null) _database.insertRow(row, _diffTable);
         } catch (SQLException e_) {
             throw new RuntimeException(e_);
         }
@@ -142,6 +150,29 @@ public class DKCustomDBSink extends DKAbstractSink {
 
     private Map<String, ?> createRow(DKDiff diff_, Object[] lhsData, Object[] rhsData, DKContext context_) {
         Map<String, Object> row = new HashMap<>();
+
+        if (diff_ != null) {
+            switch (diff_.getKind()) {
+                case ROW_DIFF:
+                    row.put("DIFF", ((DKRowDiff)diff_).getSide() == DKSide.LEFT ? "2" : "1");
+                    break;
+                case COLUMN_DIFF:
+                    if (_previousRowStep == null) {
+                        // first column
+                        _previousRowStep = context_._rowStep;
+                    } else if (_previousRowStep != context_._rowStep) {
+                        // walk to next row, reset recorded row step
+                        _previousRowStep = null;
+                    } else {
+                        // still in same row, skip to record
+                        return null;
+                    }
+
+                    row.put("DIFF", "3");
+                    break;
+            }
+        } else row.put("DIFF", "0");
+
         for (int sideIdx=0; sideIdx<2; sideIdx++) {
             for (int columnIdx=0; columnIdx<_displayColumnNames[sideIdx].length; columnIdx++) {
                 String columnName = _displayColumnNames[sideIdx][columnIdx];
@@ -149,14 +180,7 @@ public class DKCustomDBSink extends DKAbstractSink {
                 row.put((sideIdx == 0 ? "lhs_" : "rhs_")+columnName, data != null ? data[columnIdx] : null);
             }
         }
-        switch (diff_.getKind()) {
-            case ROW_DIFF:
-                row.put("DIFF", ((DKRowDiff)diff_).getSide() == DKSide.LEFT ? "L" : "R");
-                break;
-            case COLUMN_DIFF:
-                row.put("DIFF", "U");
-                break;
-        }
+
         return row;
     }
 
@@ -184,7 +208,7 @@ public class DKCustomDBSink extends DKAbstractSink {
 
         columns.add(new DKDBColumn("DIFF", columns.size(), "VARCHAR", 128, true));
         DKDBColumn[] columnArray = columns.toArray(new DKDBColumn[columns.size()]);
-        return new DKDBTable(null, null, "diff_result", columnArray);
+        return new DKDBTable(null, null, _diffTableName, columnArray);
     }
 
     public String getSummary(DKContext context_) {

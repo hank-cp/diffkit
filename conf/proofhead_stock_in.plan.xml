@@ -106,13 +106,14 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     	<constructor-arg index="0" value="./proofhead.stock.in.summary.diff" />
 		<constructor-arg index="1" ref="sinkConnectionSource" />
 		<constructor-arg index="2" ref="table.comparison" />
+		<constructor-arg index="3" value="diff_zs_stock_in" />
 	</bean>
 
 	<!-- ATS database config -->
 
 	<bean id="lhs.source" class="org.diffkit.diff.sns.DKDBSource">
 		<constructor-arg index="0" value="proc_stock_in_task" />
-		<constructor-arg index="1" value="WHERE STATUS&lt;&gt;3" />
+		<constructor-arg index="1" value="WHERE CRAFT = 0" />
 		<constructor-arg index="2" ref="atsConnectionSource" />
 		<constructor-arg index="3" ref="lhs.table.model" />
 		<constructor-arg index="4">
@@ -184,7 +185,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<bean id="rhs.source" class="org.diffkit.diff.sns.DKDBSource">
 		<constructor-arg index="0" value="moctg" />
-		<constructor-arg index="1" value="WHERE TG022='Y' AND TG001='5801' AND CREATE_DATE > '20151230000000000' OR MODI_DATE > '20151230000000000'" />
+		<constructor-arg index="1" value="WHERE TG022='Y' AND TG001='5801' AND CREATE_DATE > '20160105180000000' OR MODI_DATE > '20160105180000000'" />
 		<constructor-arg index="2" ref="yfConnectionSource" />
 		<constructor-arg index="3" ref="rhs.table.model" />
 		<constructor-arg index="4">
