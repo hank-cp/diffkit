@@ -101,7 +101,7 @@ public class DKSqlPatchSink extends DKAbstractSink {
       return _file;
    }
 
-   public void record(DKDiff diff_, DKContext context_) {
+   public void record(DKDiff diff_, Object[] lhsData, Object[] rhsData, DKContext context_) {
       this.ensureStarted();
       this.ensureNotEnded();
       if (diff_ == null)

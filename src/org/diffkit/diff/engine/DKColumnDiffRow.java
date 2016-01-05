@@ -53,6 +53,10 @@ public class DKColumnDiffRow {
       return _lhsRow;
    }
 
+   public Object[] getRhsRow() {
+      return _rhsRow;
+   }
+
    // key side arbitrary; keyValeus guaranteed to match on both sides
    public Object[] getRowKeyValues() {
       return _tableComparison.getRowKeyValues(_lhsRow, DKSide.LEFT_INDEX);

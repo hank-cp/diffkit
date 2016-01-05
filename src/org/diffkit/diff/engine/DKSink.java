@@ -26,7 +26,7 @@ import java.io.IOException;
  */
 public interface DKSink extends DKSourceSink {
 
-   public void record(DKDiff diff_, DKContext context_) throws IOException;
+   public void record(DKDiff diff_, Object[] lhsData, Object[] rhsData, DKContext context_) throws IOException;
 
    /**
     * includes DKDiffs of any Kind

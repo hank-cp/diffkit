@@ -98,7 +98,7 @@
 		<mkdir dir="${build.dir}" />
 		<mkdir dir="${unit.build.dir}" />
 
-		<javac destdir="${build.dir}" classpathref="lib.classpath" verbose="off" target="1.5" source="1.5" debug="on" deprecation="off">
+		<javac destdir="${build.dir}" classpathref="lib.classpath" verbose="off" target="1.8" source="1.8" debug="on" deprecation="off">
 			<compilerarg value="-Xlint" />
 			<src path="${src.dir}" />
 		</javac>
@@ -108,7 +108,7 @@
 			<src path="${tst.dir}" />
 			<include name="**/testcase/**" />
 			<include name="**/DBTestSetup*" />
-			<javac target="1.5" source="1.5" debug="on" deprecation="off" />
+			<javac target="1.8" source="1.8" debug="on" deprecation="off" />
 		</groovyc>
 
 		<copy todir="${build.dir}">
@@ -130,7 +130,7 @@
 			</classpath>
 			<src path="${tst.dir}" />
 			<include name="**/tst/*" />
-			<javac target="1.5" source="1.5" debug="on" deprecation="off" />
+			<javac target="1.8" source="1.8" debug="on" deprecation="off" />
 		</groovyc>
 
 		<copy todir="${unit.build.dir}">
@@ -566,7 +566,7 @@
 		<mkdir dir="${contrib.build.dir}" />
 		<mkdir dir="${dist.dir}" />
 
-		<javac destdir="${contrib.build.dir}" verbose="off" target="1.5" source="1.5" debug="on" deprecation="off">
+		<javac destdir="${contrib.build.dir}" verbose="off" target="1.8" source="1.8" debug="on" deprecation="off">
 			<compilerarg value="-Xlint" />
 			<classpath>
 				<path refid="lib.classpath" />

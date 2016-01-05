@@ -83,7 +83,7 @@ public abstract class DKAbstractSink implements DKSink {
       this.closeAndRecordDiffCluster(context_);
    }
 
-   public void record(DKDiff diff_, DKContext context_) throws IOException {
+   public void record(DKDiff diff_, Object[] lhsData, Object[] rhsData, DKContext context_) throws IOException {
       boolean receiverNull = (_context == null);
       boolean callerNull = (context_ == null);
       if (receiverNull && callerNull)

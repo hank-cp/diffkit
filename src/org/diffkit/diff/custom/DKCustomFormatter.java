@@ -21,7 +21,7 @@ import org.diffkit.diff.engine.*;
 import org.diffkit.diff.sns.DKDiffFormatter;
 
 /**
- * @author jpanico
+ * @author hank_cp
  */
 @NotThreadSafe
 public class DKCustomFormatter implements DKDiffFormatter {

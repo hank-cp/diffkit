@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
  * The instructions for how to carry out a complete comparison of one table
  * (lhs) to another table (rhs)
  *
- * @author jpanico
+ * @author hank_cp
  */
 public class DKCustomTableComparison extends DKStandardTableComparison {
 
@@ -86,6 +86,18 @@ public class DKCustomTableComparison extends DKStandardTableComparison {
                     + columns[displayIndexes[i]]._name, displayValue);
         }
         return result;
+    }
+
+    public String[][] getDisplayColumnNames() {
+        String[][] names = new String[2][_displayIndexes[0].length];
+        for (int sideIdx=0; sideIdx<2; sideIdx++) {
+            DKColumnModel[] columns = _tableModels[sideIdx].getColumns();
+            int[] displayIndexes = _displayIndexes[sideIdx];
+            for (int i = 0; i < displayIndexes.length; i++) {
+                names[sideIdx][displayIndexes[i]] = columns[displayIndexes[i]]._name;
+            }
+        }
+        return names;
     }
 
 }

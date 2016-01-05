@@ -81,8 +81,8 @@ public class DKDBSink extends DKAbstractSink {
       super.close(context_);
    }
 
-   public void record(DKDiff diff_, DKContext context_) throws IOException {
-      super.record(diff_, context_);
+   public void record(DKDiff diff_, Object[] lhsData, Object[] rhsData, DKContext context_) throws IOException {
+      super.record(diff_, lhsData, rhsData, context_);
       try {
          this.saveDiff(diff_, context_);
       }

@@ -40,7 +40,7 @@ public class DKListSink extends DKAbstractSink {
       super(null);
    }
 
-   public void record(DKDiff diff_, DKContext context_) {
+   public void record(DKDiff diff_, Object[] lhsData, Object[] rhsData, DKContext context_) {
       this.ensureStarted();
       this.ensureNotEnded();
       if (diff_ == null)

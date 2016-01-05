@@ -8,7 +8,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<bean id="plan" class="org.diffkit.diff.conf.DKPassthroughPlan">
 		<property name="lhsSource" ref="lhs.source" />
 		<property name="rhsSource" ref="rhs.source" />
-		<property name="sink" ref="sink.custom" />
+		<property name="sink" ref="sink.db" />
 		<property name="tableComparison" ref="table.comparison" />
 	</bean>
 
@@ -98,12 +98,14 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="0" value="./proofhead.sink.diff" />
 	</bean-->
 
-    <bean id="sink.custom" class="org.diffkit.diff.custom.DKCustomFileSink">
+    <!--bean id="sink.file" class="org.diffkit.diff.custom.DKCustomFileSink">
         <constructor-arg index="0" value="./proofhead.stock.in.diff" />
-    </bean>
+    </bean-->
 
-	<bean id="sink.db" class="org.diffkit.diff.sns.DKDBSink">
-    	<constructor-arg index="0" ref="sinkConnectionSource" />
+	<bean id="sink.db" class="org.diffkit.diff.custom.DKCustomDBSink">
+    	<constructor-arg index="0" value="./proofhead.stock.in.summary.diff" />
+		<constructor-arg index="1" ref="sinkConnectionSource" />
+		<constructor-arg index="2" ref="table.comparison" />
 	</bean>
 
 	<!-- ATS database config -->

@@ -8,3 +8,4 @@ unit.build/
 .classpath
 *.diff
 *.diff.*
+*.bak

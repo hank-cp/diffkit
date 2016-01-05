@@ -150,7 +150,7 @@ public class DKDiffEngine {
             DKColumnDiff columnDiff = diffRow.createDiff(context_._columnStep,
                columnComparisons[diffIndexes[i]].getLHValue(lhs_),
                columnComparisons[diffIndexes[i]].getRHValue(rhs_));
-            sink_.record(columnDiff, context_);
+            sink_.record(columnDiff, lhs_, rhs_, context_);
             rowConsistent = false;
          }
       }
@@ -171,7 +171,9 @@ public class DKDiffEngine {
       long rowStep = context_.getRowStep();
       DKSide side = DKSide.getEnumForConstant(sideIdx_);
       DKRowDiff rowDiff = new DKRowDiff(rowStep, row_, side, tableComparison);
-      sink_.record(rowDiff, context_);
+      sink_.record(rowDiff,
+              (side == DKSide.LEFT ? row_ : null),
+              (side == DKSide.RIGHT ? row_ : null), context_);
    }
 
 }

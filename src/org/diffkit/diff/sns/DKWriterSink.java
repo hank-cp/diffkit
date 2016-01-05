@@ -67,8 +67,8 @@ public class DKWriterSink extends DKAbstractSink {
       return _formatter;
    }
 
-   public void record(DKDiff diff_, DKContext context_) throws IOException {
-      super.record(diff_, context_);
+   public void record(DKDiff diff_, Object[] lhsData, Object[] rhsData, DKContext context_) throws IOException {
+      super.record(diff_, lhsData, rhsData, context_);
       if (diff_ == null)
          return;
       String diffString = _formatter.format(diff_, context_);

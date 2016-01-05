@@ -29,7 +29,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 
 /**
- * @author jpanico
+ * @author hank_cp
  */
 public class DKCustomFileSink extends DKWriterSink {
 
@@ -84,7 +84,6 @@ public class DKCustomFileSink extends DKWriterSink {
    @Override
    public void open(DKContext context_) throws IOException {
       this.init(_writer, DKCustomFormatter.getInstance());
-      _writer.write("[\n");
       super.open(context_);
    }
 
