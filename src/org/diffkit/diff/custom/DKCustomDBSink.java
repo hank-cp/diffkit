@@ -54,7 +54,7 @@ public class DKCustomDBSink extends DKAbstractSink {
     private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
     private int _consistentCount;
-    private int _failedConsistentCount;
+    private int _failedUpdateCount;
     private Long _previousRowStep;
 
     public DKCustomDBSink(String summaryFilePath_, DKDatabase database_,
@@ -121,19 +121,16 @@ public class DKCustomDBSink extends DKAbstractSink {
 
     @Override
     public void onRowConsistent(DKSource lhs, Object[] lhsData, DKSource rhs, Object[] rhsData) {
-        DKDBSource dbSource = (DKDBSource) lhs;
         try {
-            try {
-                Map<String, ?> row = this.createRow(null, lhsData, rhsData, _context);
-                _database.insertRow(row, _diffTable);
-            } catch (SQLException e_) {
-                throw new RuntimeException(e_);
-            }
+            Map<String, ?> row = this.createRow(null, lhsData, rhsData, _context);
+            _database.insertRow(row, _diffTable);
 
             _consistentCount += 1;
+            // FIXME hardcode pass proofhead
+            DKDBSource dbSource = (DKDBSource) lhs;
             dbSource.getDatabase().executeUpdate("UPDATE `proc_stock_in_task` SET `STATUS`=3 WHERE `TASK_NUMBER`=" + lhsData[0]);
         } catch (SQLException e) {
-            _failedConsistentCount += 1;
+            _failedUpdateCount += 1;
             _log.error("Update lhs table failed.", e);
         }
     }
@@ -143,6 +140,24 @@ public class DKCustomDBSink extends DKAbstractSink {
         try {
             Map<String, ?> row = this.createRow(diff_, lhsData, rhsData, context_);
             if (row != null) _database.insertRow(row, _diffTable);
+
+            try {
+                if (diff_.getKind() == DKDiff.Kind.ROW_DIFF
+                        && ((DKRowDiff)diff_).getSide() == DKSide.LEFT) {
+                    // FIXME hardcode left only
+//                DKDBSource dbSource = (DKDBSource) context_._lhs;
+//                dbSource.getDatabase().executeUpdate("UPDATE `proc_stock_in_task` SET `STATUS`=1 WHERE `TASK_NUMBER`=" + lhsData[0]);
+
+                } else if (diff_.getKind() == DKDiff.Kind.COLUMN_DIFF) {
+                    // FIXME hardcode proofhead failed
+                    DKDBSource dbSource = (DKDBSource) context_._lhs;
+                    dbSource.getDatabase().executeUpdate("UPDATE `proc_stock_in_task` SET `STATUS`=2 WHERE `TASK_NUMBER`=" + lhsData[0]);
+                }
+            } catch (SQLException e) {
+                _failedUpdateCount += 1;
+                _log.error("Update lhs table failed.", e);
+            }
+
         } catch (SQLException e_) {
             throw new RuntimeException(e_);
         }
@@ -223,8 +238,8 @@ public class DKCustomDBSink extends DKAbstractSink {
         builder.append(String.format("\"rows\":%d,", context_._rowStep - 1));
         builder.append(String.format("\"diff_rows\":%d,", getRowDiffCount()));
         builder.append(String.format("\"column_rows\":%d,", getColumnDiffCount()));
-        builder.append(String.format("\"consistentCount\":%d,", _consistentCount));
-        builder.append(String.format("\"failedUpdateConsistentCount\":%d", _failedConsistentCount));
+        builder.append(String.format("\"consistent_count\":%d,", _consistentCount));
+        builder.append(String.format("\"failed_update_count\":%d", _failedUpdateCount));
         builder.append("}");
         return builder.toString();
     }
