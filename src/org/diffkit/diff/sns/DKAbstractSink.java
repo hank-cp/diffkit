@@ -216,6 +216,14 @@ public abstract class DKAbstractSink implements DKSink {
       return (_rowDiffCount[DKSide.LEFT_INDEX] + _rowDiffCount[DKSide.RIGHT_INDEX]);
    }
 
+   public long getLeftOnlyRowCount() {
+      return _rowDiffCount[DKSide.LEFT_INDEX];
+   }
+
+   public long getRightOnlyRowCount() {
+      return _rowDiffCount[DKSide.RIGHT_INDEX];
+   }
+
    public long getColumnDiffCount() {
       return _columnDiffCount.totalCount();
    }

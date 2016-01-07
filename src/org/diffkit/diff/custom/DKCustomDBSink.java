@@ -128,7 +128,7 @@ public class DKCustomDBSink extends DKAbstractSink {
             _consistentCount += 1;
             // FIXME hardcode pass proofhead
             DKDBSource dbSource = (DKDBSource) lhs;
-            dbSource.getDatabase().executeUpdate("UPDATE `proc_stock_in_task` SET `STATUS`=3 WHERE `TASK_NUMBER`=" + lhsData[0]);
+            dbSource.getDatabase().executeUpdate("UPDATE proc_stock_in_task SET STATUS=3 WHERE TASK_NUMBER='" + lhsData[0]+"'");
         } catch (SQLException e) {
             _failedUpdateCount += 1;
             _log.error("Update lhs table failed.", e);
@@ -151,7 +151,7 @@ public class DKCustomDBSink extends DKAbstractSink {
                 } else if (diff_.getKind() == DKDiff.Kind.COLUMN_DIFF) {
                     // FIXME hardcode proofhead failed
                     DKDBSource dbSource = (DKDBSource) context_._lhs;
-                    dbSource.getDatabase().executeUpdate("UPDATE `proc_stock_in_task` SET `STATUS`=2 WHERE `TASK_NUMBER`=" + lhsData[0]);
+                    dbSource.getDatabase().executeUpdate("UPDATE proc_stock_in_task SET STATUS=2 WHERE TASK_NUMBER='" + lhsData[0]+"'");
                 }
             } catch (SQLException e) {
                 _failedUpdateCount += 1;
@@ -236,10 +236,11 @@ public class DKCustomDBSink extends DKAbstractSink {
                 : context_.getElapsedTimeString();
         builder.append(String.format("\"diff_elapsed_time\":\"%s\",", elapsedTimeString));
         builder.append(String.format("\"rows\":%d,", context_._rowStep - 1));
-        builder.append(String.format("\"diff_rows\":%d,", getRowDiffCount()));
-        builder.append(String.format("\"column_rows\":%d,", getColumnDiffCount()));
-        builder.append(String.format("\"consistent_count\":%d,", _consistentCount));
-        builder.append(String.format("\"failed_update_count\":%d", _failedUpdateCount));
+        builder.append(String.format("\"left_only\":%d,", getLeftOnlyRowCount()));
+        builder.append(String.format("\"right_only\":%d,", getRightOnlyRowCount()));
+        builder.append(String.format("\"diff_rows\":%d,", getColumnDiffCount()));
+        builder.append(String.format("\"consistent_rows\":%d,", _consistentCount));
+        builder.append(String.format("\"failed_update_rows\":%d", _failedUpdateCount));
         builder.append("}");
         return builder.toString();
     }
