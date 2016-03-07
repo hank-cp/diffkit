@@ -47,7 +47,6 @@ public class DKCustomDBSink extends DKAbstractSink {
     private final Writer _summaryWriter;
     private final DKDatabase _database;
     private final DKDBTable _diffTable;
-    private transient Connection _connection;
     private final String[][] _displayColumnNames;
     private final String _diffTableName;
     private final String _diffResultTableDDLExtra;
@@ -118,13 +117,12 @@ public class DKCustomDBSink extends DKAbstractSink {
     public void open(DKContext context_) throws IOException {
         super.open(context_);
         try {
-            _connection = _database.getConnection();
             ensureDiffTable();
         } catch (SQLException e_) {
             _log.error(null, e_);
             throw new RuntimeException(e_);
         }
-        _log.info("_connection->{}", _connection);
+        _log.info("_sinkDatabase->{}", _database.toString());
     }
 
     public String toString() {
@@ -139,8 +137,13 @@ public class DKCustomDBSink extends DKAbstractSink {
         _summaryWriter.write(getSummary(_context));
         _summaryWriter.close();
 
-        DKSqlUtil.close(_connection);
-        _connection = null;
+        try {
+            DKSqlUtil.close(_database.getConnection());
+        } catch (SQLException e_) {
+            _log.error(null, e_);
+            throw new RuntimeException(e_);
+        }
+
         super.close(context_);
     }
 
