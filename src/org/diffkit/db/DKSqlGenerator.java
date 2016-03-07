@@ -100,7 +100,12 @@ public class DKSqlGenerator {
       if (primaryKey != null)
          builder.append(String.format("\t\t%s", this.generateCreateDDL(primaryKey)));
 
-      builder.append(")\n");
+      builder.append(")");
+      if (StringUtils.isNotEmpty(table_.getDDLExtra())) {
+         builder.append(" ").append(table_.getDDLExtra());
+      }
+      builder.append(";");
+
       String ddlString = builder.toString();
       if (_log.isDebugEnabled())
          _log.debug("ddlString->{}", ddlString);

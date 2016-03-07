@@ -40,6 +40,7 @@ public class DKDBTable {
    private final String _tableName;
    private final DKDBColumn[] _columns;
    private final DKDBPrimaryKey _primaryKey;
+   private final String _ddlExtra;
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
    private final boolean _isDebugEnabled = _log.isDebugEnabled();
 
@@ -50,12 +51,18 @@ public class DKDBTable {
 
    public DKDBTable(String catalog_, String schema_, String tableName_,
                     DKDBColumn[] columns_, DKDBPrimaryKey primaryKey_) {
+      this(catalog_, schema_, tableName_, columns_, primaryKey_, null);
+   }
+
+   public DKDBTable(String catalog_, String schema_, String tableName_,
+                    DKDBColumn[] columns_, DKDBPrimaryKey primaryKey_, String ddlExtra_) {
       _catalog = catalog_;
       _schema = schema_;
       _tableName = tableName_;
       _columns = (DKDBColumn[]) ArrayUtils.clone(columns_);
       Arrays.sort(_columns);
       _primaryKey = primaryKey_;
+      _ddlExtra = ddlExtra_;
       DKValidate.notNull(_tableName);
       this.validatePrimaryKey(_primaryKey, _columns);
       this.ensureRelationships(_columns);
@@ -291,5 +298,9 @@ public class DKDBTable {
                "keyColumnName->%s is not in columns->%s", keyColumnName,
                Arrays.toString(columns_)));
       }
+   }
+
+   public String getDDLExtra() {
+      return _ddlExtra;
    }
 }

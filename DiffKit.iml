@@ -45,10 +45,12 @@
     <facet type="Spring" name="Spring">
       <configuration>
         <fileset id="fileset" name="Spring Application Context" removed="false">
-          <file>file://$MODULE_DIR$/proofhead_stock_in.plan.xml</file>
-          <file>file://$MODULE_DIR$/dbConnectionInfo.xml</file>
           <file>file://$MODULE_DIR$/conf/dbConnectionInfo.xml</file>
-          <file>file://$MODULE_DIR$/conf/proofhead_stock_in.plan.xml</file>
+          <file>file://$MODULE_DIR$/conf/proofhead_stock_in_yy.plan.xml</file>
+          <file>file://$MODULE_DIR$/conf/proofhead_stock_in_yy.plan.xml</file>
+          <file>file://$MODULE_DIR$/conf/proofhead_stock_in_zs.plan.xml</file>
+          <file>file://$MODULE_DIR$/conf/proofhead_stock_in_zs.plan.xml</file>
+          <file>file://$MODULE_DIR$/conf/proofhead_product.plan.xml</file>
         </fileset>
       </configuration>
     </facet>
@@ -61,6 +63,9 @@
       <sourceFolder url="file://$MODULE_DIR$/tst" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/conf" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/contrib" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/build" />
+      <excludeFolder url="file://$MODULE_DIR$/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/unit.build" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="inheritedJdk" />

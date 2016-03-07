@@ -16,11 +16,11 @@
 package org.diffkit.diff.custom;
 
 import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.lang.StringUtils;
 import org.diffkit.common.DKRuntime;
 import org.diffkit.common.DKValidate;
 import org.diffkit.db.DKDBColumn;
 import org.diffkit.db.DKDBTable;
-import org.diffkit.db.DKDBTableDataAccess;
 import org.diffkit.db.DKDatabase;
 import org.diffkit.diff.engine.*;
 import org.diffkit.diff.sns.DKAbstractSink;
@@ -46,19 +46,32 @@ public class DKCustomDBSink extends DKAbstractSink {
     private final File _summaryFile;
     private final Writer _summaryWriter;
     private final DKDatabase _database;
-    private final DKDBTableDataAccess _tableDataAccess;
     private final DKDBTable _diffTable;
     private transient Connection _connection;
     private final String[][] _displayColumnNames;
     private final String _diffTableName;
-    private final Logger _log = LoggerFactory.getLogger(this.getClass());
+    private final String _diffResultTableDDLExtra;
+
+    private final DKDBSource _writeBackDataSource;
+    private final int _writeBackKeyIndex;
+    private final String _rowConsistenceWriteBackStatement;
+    private final String _rowDiffWriteBackStatement;
+    private final String _columnDiffWriteBackStatement;
 
     private int _consistentCount;
     private int _failedUpdateCount;
     private Long _previousRowStep;
 
+    private final Logger _log = LoggerFactory.getLogger(this.getClass());
+
     public DKCustomDBSink(String summaryFilePath_, DKDatabase database_,
-                          DKCustomTableComparison comparison_, String diffTableName_) throws SQLException {
+                          DKCustomTableComparison comparison_, String diffTableName_,
+                          String diffResultTableDDLExtra_,
+                          DKDBSource writeBackDataSource_,
+                          int writeBackKeyIndex_,
+                          String rowConsistenceWriteBackStatement_,
+                          String rowDiffWriteBackStatement_,
+                          String columnDiffWriteBackStatement_) throws SQLException {
         super(null);
         File previousFile = new File(summaryFilePath_);
         if (previousFile.exists()) {
@@ -75,8 +88,15 @@ public class DKCustomDBSink extends DKAbstractSink {
         _database = database_;
         _displayColumnNames = comparison_.getDisplayColumnNames();
         _diffTableName = diffTableName_;
-        _tableDataAccess = new DKDBTableDataAccess(_database);
+        _diffResultTableDDLExtra = diffResultTableDDLExtra_;
         _diffTable = this.generateDiffTable();
+
+        _writeBackDataSource = writeBackDataSource_;
+        _writeBackKeyIndex = writeBackKeyIndex_;
+        _rowConsistenceWriteBackStatement = rowConsistenceWriteBackStatement_;
+        _rowDiffWriteBackStatement = rowDiffWriteBackStatement_;
+        _columnDiffWriteBackStatement = columnDiffWriteBackStatement_;
+
         DKValidate.notNull(_database, _diffTable);
     }
 
@@ -126,9 +146,9 @@ public class DKCustomDBSink extends DKAbstractSink {
             _database.insertRow(row, _diffTable);
 
             _consistentCount += 1;
-            // FIXME hardcode pass proofhead
-            DKDBSource dbSource = (DKDBSource) lhs;
-            dbSource.getDatabase().executeUpdate("UPDATE proc_stock_in_task SET STATUS=3 WHERE TASK_NUMBER='" + lhsData[0]+"'");
+            if (_writeBackDataSource != null && StringUtils.isNotEmpty(_rowConsistenceWriteBackStatement)) {
+                _writeBackDataSource.getDatabase().executeUpdate(String.format(_rowConsistenceWriteBackStatement, lhsData[_writeBackKeyIndex]));
+            }
         } catch (SQLException e) {
             _failedUpdateCount += 1;
             _log.error("Update lhs table failed.", e);
@@ -143,15 +163,15 @@ public class DKCustomDBSink extends DKAbstractSink {
 
             try {
                 if (diff_.getKind() == DKDiff.Kind.ROW_DIFF
-                        && ((DKRowDiff)diff_).getSide() == DKSide.LEFT) {
-                    // FIXME hardcode left only
-//                DKDBSource dbSource = (DKDBSource) context_._lhs;
-//                dbSource.getDatabase().executeUpdate("UPDATE `proc_stock_in_task` SET `STATUS`=1 WHERE `TASK_NUMBER`=" + lhsData[0]);
+                        && _writeBackDataSource != null
+                        && StringUtils.isNotEmpty(_rowDiffWriteBackStatement)) {
+                    _writeBackDataSource.getDatabase().executeUpdate(String.format(_rowDiffWriteBackStatement,
+                            ((DKRowDiff)diff_).getSide() == DKSide.LEFT ? lhsData[_writeBackKeyIndex] : rhsData[_writeBackKeyIndex]));
 
-                } else if (diff_.getKind() == DKDiff.Kind.COLUMN_DIFF) {
-                    // FIXME hardcode proofhead failed
-                    DKDBSource dbSource = (DKDBSource) context_._lhs;
-                    dbSource.getDatabase().executeUpdate("UPDATE proc_stock_in_task SET STATUS=2 WHERE TASK_NUMBER='" + lhsData[0]+"'");
+                } else if (diff_.getKind() == DKDiff.Kind.COLUMN_DIFF
+                        && _writeBackDataSource != null
+                        && StringUtils.isNotEmpty(_columnDiffWriteBackStatement)) {
+                    _writeBackDataSource.getDatabase().executeUpdate(String.format(_columnDiffWriteBackStatement, lhsData[_writeBackKeyIndex]));
                 }
             } catch (SQLException e) {
                 _failedUpdateCount += 1;
@@ -223,7 +243,8 @@ public class DKCustomDBSink extends DKAbstractSink {
 
         columns.add(new DKDBColumn("DIFF", columns.size(), "VARCHAR", 128, true));
         DKDBColumn[] columnArray = columns.toArray(new DKDBColumn[columns.size()]);
-        return new DKDBTable(null, null, _diffTableName, columnArray);
+        return new DKDBTable(null, null, _diffTableName, columnArray, null,
+                _diffResultTableDDLExtra);
     }
 
     public String getSummary(DKContext context_) {

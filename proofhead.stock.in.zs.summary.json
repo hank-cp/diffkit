@@ -1,0 +1,10 @@
+{
+  "diff_start": "2016-03-07T17:29:14+0800",
+  "diff_elapsed_time": "0:00:08.141",
+  "rows": 9481,
+  "left_only": 394,
+  "right_only": 0,
+  "diff_rows": 1,
+  "consistent_rows": 9086,
+  "failed_update_rows": 0
+}
