@@ -103,7 +103,7 @@ public class DKSqlUtil {
          return value_.toString();
       case STRING:
          String stringValue = value_.toString();
-         stringValue = stringValue.replaceAll("'", "''");
+         stringValue = stringValue.replaceAll("'", "\\\\'");
          return DKStringUtil.quote(stringValue, DKStringUtil.Quote.SINGLE);
       case DATE:
          if (value_ instanceof Date)
@@ -343,7 +343,7 @@ public class DKSqlUtil {
          return true;
       }
       catch (Exception e_) {
-         LOG.error(null, e_);
+         LOG.error("Execute sql statement failed: "+sql_, e_);
          return false;
       }
    }
