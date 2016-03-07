@@ -58,6 +58,8 @@ public class DKCustomDBSink extends DKAbstractSink {
     private final String _rowDiffWriteBackStatement;
     private final String _columnDiffWriteBackStatement;
 
+    private final DKDBExcludeConfig _excludeConfig;
+
     private int _consistentCount;
     private int _failedUpdateCount;
     private Long _previousRowStep;
@@ -71,7 +73,8 @@ public class DKCustomDBSink extends DKAbstractSink {
                           int writeBackKeyIndex_,
                           String rowConsistenceWriteBackStatement_,
                           String rowDiffWriteBackStatement_,
-                          String columnDiffWriteBackStatement_) throws SQLException {
+                          String columnDiffWriteBackStatement_,
+                          DKDBExcludeConfig excludeConfig_) throws SQLException {
         super(null);
         File previousFile = new File(summaryFilePath_);
         if (previousFile.exists()) {
@@ -96,6 +99,8 @@ public class DKCustomDBSink extends DKAbstractSink {
         _rowConsistenceWriteBackStatement = rowConsistenceWriteBackStatement_;
         _rowDiffWriteBackStatement = rowDiffWriteBackStatement_;
         _columnDiffWriteBackStatement = columnDiffWriteBackStatement_;
+
+        _excludeConfig = excludeConfig_;
 
         DKValidate.notNull(_database, _diffTable);
     }
@@ -156,6 +161,13 @@ public class DKCustomDBSink extends DKAbstractSink {
     }
 
     public void record(DKDiff diff_, Object[] lhsData, Object[] rhsData, DKContext context_) throws IOException {
+        if (_excludeConfig != null && _excludeConfig.getExcludeKeyList().contains(
+                getDiffKeyValue(diff_, lhsData, rhsData, context_))) {
+            // filter by exclude config
+            onRowConsistent(context_._lhs, lhsData, context_._rhs, rhsData);
+            return;
+        }
+
         super.record(diff_, lhsData, rhsData, context_);
         try {
             Map<String, ?> row = this.createRow(diff_, lhsData, rhsData, context_);
@@ -181,6 +193,22 @@ public class DKCustomDBSink extends DKAbstractSink {
         } catch (SQLException e_) {
             throw new RuntimeException(e_);
         }
+    }
+
+    public String getDiffKeyValue(DKDiff diff_, Object[] lhsData, Object[] rhsData, DKContext context_) {
+        if (diff_.getKind() == DKDiff.Kind.COLUMN_DIFF) {
+            return context_._lhs.getModel().getKeyValues(lhsData)[0].toString();
+
+        } else if (diff_.getKind() == DKDiff.Kind.ROW_DIFF
+                &&  ((DKRowDiff)diff_).getSide() == DKSide.LEFT) {
+            return context_._lhs.getModel().getKeyValues(lhsData)[0].toString();
+
+        } else if (diff_.getKind() == DKDiff.Kind.ROW_DIFF
+                &&  ((DKRowDiff)diff_).getSide() == DKSide.RIGHT) {
+            return context_._rhs.getModel().getKeyValues(rhsData)[0].toString();
+        }
+
+        throw new RuntimeException("Resolve key value failed.");
     }
 
     private Map<String, ?> createRow(DKDiff diff_, Object[] lhsData, Object[] rhsData, DKContext context_) {

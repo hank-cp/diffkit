@@ -269,7 +269,7 @@ public class DKStandardTableComparison implements DKTableComparison {
 
    public String toString() {
       return String.format("%s[%s<->%s]", ClassUtils.getShortClassName(this.getClass()),
-         _tableModels[DKSide.LEFT_INDEX], _tableModels[DKSide.LEFT_INDEX]);
+         _tableModels[DKSide.LEFT_INDEX], _tableModels[DKSide.RIGHT_INDEX]);
    }
 
    public String getDescription() {

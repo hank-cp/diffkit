@@ -98,7 +98,14 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="7" value="" />
 		<constructor-arg index="8" value="" />
 		<constructor-arg index="9" value="" />
+		<constructor-arg index="10" ref="exclude.config" />
 	</bean>
+
+    <bean id="exclude.config" class="org.diffkit.diff.custom.DKDBExcludeConfig">
+        <constructor-arg index="0" ref="atsConnectionSource" />
+        <constructor-arg index="1" value="ng_proofhead_product_white_list" />
+        <constructor-arg index="2" value="CODE" />
+    </bean>
 
 	<!-- ATS database config -->
 
@@ -116,7 +123,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 	
 	<bean id="lhs.table.model" class="org.diffkit.diff.engine.DKTableModel">
-        <constructor-arg index="0" value="proc_stock_in_task" />
+        <constructor-arg index="0" value="ng_product" />
 		<constructor-arg index="1">
 			<list>
 				<ref bean="lhs.column.code" />
