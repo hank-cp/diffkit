@@ -41,8 +41,10 @@ public class DKDBExcludeConfig implements DKExcludeConfig {
             ResultSet rs = DKSqlUtil.executeQuery(String.format("SELECT %s FROM %s", _excludeConfigColumnName, _excludeConfigTableName),
                     _database.getConnection());
             List<Map<String, ?>> result = DKSqlUtil.readRows(rs);
-            for (Map<String, ?> row : result) {
-                _excludeKeys.add(row.get(_excludeConfigColumnName).toString());
+            if (result != null && result.size() > 0) {
+                for (Map<String, ?> row : result) {
+                    _excludeKeys.add(row.get(_excludeConfigColumnName).toString());
+                }
             }
             return _excludeKeys;
         } catch (Exception e) {
