@@ -146,7 +146,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="5" ref="lhs.source" />
 		<constructor-arg index="6" value="0" />
 		<constructor-arg index="7" value="UPDATE ng_erp_enter_product_task SET PROOFHEAD_STATE='3' WHERE CODE='%s'" />
-		<constructor-arg index="8" value="" />
+		<constructor-arg index="8" value="UPDATE ng_erp_enter_product_task SET PROOFHEAD_STATE='0' WHERE CODE='%s'" />
 		<constructor-arg index="9" value="UPDATE ng_erp_enter_product_task SET PROOFHEAD_STATE='2' WHERE CODE='%s'" />
 		<constructor-arg index="10" ref="exclude.config" />
 	</bean>
