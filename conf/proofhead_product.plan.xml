@@ -172,7 +172,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	</bean>
 	
 	<bean id="lhs.table.model" class="org.diffkit.diff.engine.DKTableModel">
-        <constructor-arg index="0" value="ng_product" />
+        <constructor-arg index="0" value="ng_proofhead_product_view" />
 		<constructor-arg index="1">
 			<list>
 				<ref bean="lhs.column.code" />
