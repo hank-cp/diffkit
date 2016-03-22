@@ -26,7 +26,6 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 				<ref bean="column.comparison.feature" />
 				<ref bean="column.comparison.wareHouse" />
 				<ref bean="column.comparison.workStation" />
-				<ref bean="column.comparison.status" />
 			</list>
 		</constructor-arg>
 		<constructor-arg index="4">
@@ -39,7 +38,6 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 				<value>5</value>
 				<value>6</value>
 				<value>7</value>
-				<value>8</value>
 			</list>
 		</constructor-arg>
 		<constructor-arg index="5">
@@ -122,6 +120,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="2" ref="equalsDiffor" />
 	</bean>
 
+	<!-- status not compared  -->
 	<bean id="column.comparison.status" class="org.diffkit.diff.engine.DKColumnComparison">
 		<constructor-arg index="0" ref="lhs.column.status" />
 		<constructor-arg index="1" ref="rhs.column.status" />
@@ -145,9 +144,9 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="4" value="ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" />
 		<constructor-arg index="5" ref="lhs.source" />
 		<constructor-arg index="6" value="0" />
-		<constructor-arg index="7" value="UPDATE ng_erp_enter_product_task SET PROOFHEAD_STATE='3' WHERE CODE='%s'" />
-		<constructor-arg index="8" value="UPDATE ng_erp_enter_product_task SET PROOFHEAD_STATE='0' WHERE CODE='%s'" />
-		<constructor-arg index="9" value="UPDATE ng_erp_enter_product_task SET PROOFHEAD_STATE='2' WHERE CODE='%s'" />
+		<constructor-arg index="7" value="" />
+		<constructor-arg index="8" value="" />
+		<constructor-arg index="9" value="" />
 		<constructor-arg index="10" ref="exclude.config" />
 	</bean>
 
@@ -160,7 +159,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<!-- ATS database config -->
 	<bean id="lhs.source" class="org.diffkit.diff.sns.DKDBSource">
 		<constructor-arg index="0" value="ng_proofhead_product_view" />
-		<constructor-arg index="1" value="WHERE PROOFHEAD_STATE = '1' AND CREATED_DATE > '2016-01-06 16'" />
+		<constructor-arg index="1" value="" />
 		<constructor-arg index="2" ref="atsConnectionSource" />
 		<constructor-arg index="3" ref="lhs.table.model" />
 		<constructor-arg index="4">
