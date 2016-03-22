@@ -30,7 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -228,7 +227,7 @@ public class DKCustomDBSink extends DKAbstractSink {
                         _previousRowStep = context_._rowStep;
                     } else if (_previousRowStep != context_._rowStep) {
                         // walk to next row, reset recorded row step
-                        _previousRowStep = null;
+                        _previousRowStep = context_._rowStep;
                     } else {
                         // still in same row, skip to record
                         return null;
