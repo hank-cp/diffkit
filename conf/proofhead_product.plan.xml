@@ -122,7 +122,6 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="2" ref="equalsDiffor" />
 	</bean>
 
-	<!--  -->
 	<bean id="column.comparison.status" class="org.diffkit.diff.engine.DKColumnComparison">
 		<constructor-arg index="0" ref="lhs.column.status" />
 		<constructor-arg index="1" ref="rhs.column.status" />
