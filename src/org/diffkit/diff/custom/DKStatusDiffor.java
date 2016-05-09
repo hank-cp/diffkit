@@ -37,9 +37,9 @@ public class DKStatusDiffor implements DKDiffor {
       String rhs = (String) rhs_;
 
       if (lhs != null && lhs == 0) {
-         return "Y".equals(rhs) || "y".equals(rhs);
+         return !"Y".equals(rhs) && !"y".equals(rhs);
       } else if (lhs != null && lhs == 1) {
-         return "N".equals(rhs);
+         return !"N".equals(rhs);
       }
 
       return false;
