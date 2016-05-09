@@ -213,8 +213,10 @@ public class DKCustomDBSink extends DKAbstractSink {
                     break;
                 }
             }
-            if (hit) onRowConsistent(context_._lhs, lhsData, context_._rhs, rhsData);
-            return;
+            if (hit) {
+                onRowConsistent(context_._lhs, lhsData, context_._rhs, rhsData);
+                return;
+            }
         }
 
         super.record(diff_, lhsData, rhsData, context_);
