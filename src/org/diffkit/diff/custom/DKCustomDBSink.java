@@ -163,10 +163,16 @@ public class DKCustomDBSink extends DKAbstractSink {
     }
 
     public void record(DKDiff diff_, Object[] lhsData, Object[] rhsData, DKContext context_) throws IOException {
-        if (_excludeConfig != null && _excludeConfig.getExcludeKeyList().contains(
-                getDiffKeyValue(diff_, lhsData, rhsData, context_))) {
+        if (_excludeConfig != null) {
             // filter by exclude config
-            onRowConsistent(context_._lhs, lhsData, context_._rhs, rhsData);
+            boolean hit = false;
+            for (String key : _excludeConfig.getExcludeKeyList()) {
+                if (getDiffKeyValue(diff_, lhsData, rhsData, context_).startsWith(key)) {
+                    hit = true;
+                    break;
+                }
+            }
+            if (hit) onRowConsistent(context_._lhs, lhsData, context_._rhs, rhsData);
             return;
         }
 
