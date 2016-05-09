@@ -58,6 +58,8 @@ public class DKCustomDBSink extends DKAbstractSink {
 
     private final DKDBExcludeConfig _excludeConfig;
 
+    private final int _columnLength;
+
     private int _consistentCount;
     private int _failedUpdateCount;
     private Long _previousRowStep;
@@ -85,7 +87,46 @@ public class DKCustomDBSink extends DKAbstractSink {
         } catch (IOException e) {
             throw new RuntimeException("Open diff file to write failed", e);
         }
+        _database = database_;
+        _displayColumnNames = comparison_.getDisplayColumnNames();
+        _diffTableName = diffTableName_;
+        _diffResultTableDDLExtra = diffResultTableDDLExtra_;
+        _diffTable = this.generateDiffTable();
 
+        _writeBackDataSource = writeBackDataSource_;
+        _writeBackKeyIndex = writeBackKeyIndex_;
+        _rowConsistenceWriteBackStatement = rowConsistenceWriteBackStatement_;
+        _rowDiffWriteBackStatement = rowDiffWriteBackStatement_;
+        _columnDiffWriteBackStatement = columnDiffWriteBackStatement_;
+
+        _excludeConfig = excludeConfig_;
+        _columnLength = 0;//init value
+        DKValidate.notNull(_database, _diffTable);
+    }
+
+    public DKCustomDBSink(String summaryFilePath_, DKDatabase database_,
+                          DKCustomTableComparison comparison_, String diffTableName_,
+                          String diffResultTableDDLExtra_,
+                          DKDBSource writeBackDataSource_,
+                          int writeBackKeyIndex_,
+                          String rowConsistenceWriteBackStatement_,
+                          String rowDiffWriteBackStatement_,
+                          String columnDiffWriteBackStatement_,
+                          DKDBExcludeConfig excludeConfig_,
+                          int columnLength_) throws SQLException {
+        super(null);
+        File previousFile = new File(summaryFilePath_);
+        if (previousFile.exists()) {
+            previousFile.renameTo(new File(summaryFilePath_ + "." + System.currentTimeMillis()));
+        }
+
+        _summaryFile = new File(summaryFilePath_);
+        try {
+            _summaryWriter = new BufferedWriter(new FileWriter(_summaryFile));
+        } catch (IOException e) {
+            throw new RuntimeException("Open diff file to write failed", e);
+        }
+        _columnLength = columnLength_;
         _database = database_;
         _displayColumnNames = comparison_.getDisplayColumnNames();
         _diffTableName = diffTableName_;
@@ -272,7 +313,8 @@ public class DKCustomDBSink extends DKAbstractSink {
             for (int columnIdx=0; columnIdx<_displayColumnNames[sideIdx].length; columnIdx++) {
                 String columnName = _displayColumnNames[sideIdx][columnIdx];
                 DKDBColumn column = new DKDBColumn((sideIdx == 0 ? "lhs_" : "rhs_")+columnName,
-                        columnIdx+(_displayColumnNames[sideIdx].length*sideIdx)+1, "VARCHAR", 255, true);
+                        columnIdx+(_displayColumnNames[sideIdx].length*sideIdx)+1, "VARCHAR",
+                        _columnLength == 0 ? 255 : _columnLength, true);
                 columns.add(column);
             }
         }
