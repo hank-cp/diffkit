@@ -339,7 +339,7 @@ public class DKCustomDBSink extends DKAbstractSink {
         builder.append(String.format("\"rows\":%d,", context_._rowStep - 1));
         builder.append(String.format("\"left_only\":%d,", getLeftOnlyRowCount()));
         builder.append(String.format("\"right_only\":%d,", getRightOnlyRowCount()));
-        builder.append(String.format("\"diff_rows\":%d,", getColumnDiffCount()));
+        builder.append(String.format("\"diff_rows\":%d,", getColumnDiffRowCount()));
         builder.append(String.format("\"consistent_rows\":%d,", _consistentCount));
         builder.append(String.format("\"failed_update_rows\":%d", _failedUpdateCount));
         builder.append("}");
