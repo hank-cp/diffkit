@@ -61,6 +61,7 @@ public class DKCustomDBSink extends DKAbstractSink {
     private final int _columnLength;
 
     private int _consistentCount;
+    private int _columnDiffRowCount;
     private int _failedUpdateCount;
     private Long _previousRowStep;
 
@@ -222,7 +223,10 @@ public class DKCustomDBSink extends DKAbstractSink {
         super.record(diff_, lhsData, rhsData, context_);
         try {
             Map<String, ?> row = this.createRow(diff_, lhsData, rhsData, context_);
-            if (row != null) _database.insertRow(row, _diffTable);
+            if (row != null) {
+                _database.insertRow(row, _diffTable);
+                if (diff_.getKind() == DKDiff.Kind.COLUMN_DIFF) _columnDiffRowCount += 1;
+            }
 
             try {
                 if (diff_.getKind() == DKDiff.Kind.ROW_DIFF
@@ -339,7 +343,7 @@ public class DKCustomDBSink extends DKAbstractSink {
         builder.append(String.format("\"rows\":%d,", context_._rowStep - 1));
         builder.append(String.format("\"left_only\":%d,", getLeftOnlyRowCount()));
         builder.append(String.format("\"right_only\":%d,", getRightOnlyRowCount()));
-        builder.append(String.format("\"diff_rows\":%d,", getColumnDiffRowCount()));
+        builder.append(String.format("\"diff_rows\":%d,", _columnDiffRowCount));
         builder.append(String.format("\"consistent_rows\":%d,", _consistentCount));
         builder.append(String.format("\"failed_update_rows\":%d", _failedUpdateCount));
         builder.append("}");
