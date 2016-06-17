@@ -175,7 +175,7 @@ public class DKDBSource implements DKSource {
          this.getDatabase().toString());
    }
 
-   private DKDBTable getTable() throws SQLException {
+   public DKDBTable getTable() throws SQLException {
       return _table;
    }
 

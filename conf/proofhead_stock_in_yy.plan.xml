@@ -108,10 +108,12 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="4" value="ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" />
 		<constructor-arg index="5" ref="lhs.source" />
 		<constructor-arg index="6" value="0" />
-		<constructor-arg index="7" value="UPDATE proc_stock_in_task SET STATUS=3 WHERE TASK_NUMBER='%s'" />
-		<constructor-arg index="8" ><null/></constructor-arg>
-		<constructor-arg index="9" value="UPDATE proc_stock_in_task SET STATUS=2 WHERE TASK_NUMBER='%s'" />
+		<constructor-arg index="7" ref="lhs.source" />
+		<constructor-arg index="8" ref="rhs.source" />
+		<constructor-arg index="9" value="UPDATE proc_stock_in_task SET STATUS=3 WHERE TASK_NUMBER='%s'" />
 		<constructor-arg index="10" ><null/></constructor-arg>
+		<constructor-arg index="11" value="UPDATE proc_stock_in_task SET STATUS=2 WHERE TASK_NUMBER='%s'" />
+		<constructor-arg index="12" ><null/></constructor-arg>
 	</bean>
 
 	<!-- ATS database config -->
@@ -183,7 +185,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<bean id="lhs.column.createdDate" class="org.diffkit.diff.engine.DKColumnModel">
 		<constructor-arg index="0" value="5" />
 		<constructor-arg index="1" value="CREATED_DATE" />
-		<constructor-arg index="2" value="TIMESTAMP" />
+		<constructor-arg index="2" value="DATE" />
 	</bean>
 
 	<!-- YF database config -->
@@ -255,7 +257,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<bean id="rhs.column.createdDate" class="org.diffkit.diff.engine.DKColumnModel">
 		<constructor-arg index="0" value="5" />
 		<constructor-arg index="1" value="CREATE_DATE" />
-		<constructor-arg index="2" value="STRING" />
+		<constructor-arg index="2" value="DATE" />
 	</bean>
 
 </beans>

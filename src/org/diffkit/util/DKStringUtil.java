@@ -252,7 +252,11 @@ public class DKStringUtil {
       StringBuilder builder = new StringBuilder();
       builder.append("(");
       for (int i = 0; i < target_.length; i++) {
-         builder.append(target_[i].toString());
+         if (target_[i] == null) {
+            builder.append("NULL");
+         } else {
+            builder.append(target_[i].toString());
+         }
          if (i < (target_.length - 1))
             builder.append(", ");
       }

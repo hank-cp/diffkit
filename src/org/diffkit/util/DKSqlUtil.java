@@ -109,8 +109,12 @@ public class DKSqlUtil {
          if (value_ instanceof Date)
             return DKStringUtil.quote(DEFAULT_DATE_FORMAT.format(value_),
                DKStringUtil.Quote.SINGLE);
-         else
-            return DKStringUtil.quote(value_.toString(), DKStringUtil.Quote.SINGLE);
+         else {
+            String valStr = value_.toString();
+            if (valStr == null || valStr.length() == 0) return null;
+            if (!valStr.contains("-") && valStr.length() > 14) valStr = valStr.substring(0, 14);
+            return DKStringUtil.quote(valStr, DKStringUtil.Quote.SINGLE);
+         }
       case TIME:
          if (value_ instanceof Time)
             return DKStringUtil.quote(DEFAULT_TIME_FORMAT.format(value_),

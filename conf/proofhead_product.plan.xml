@@ -55,6 +55,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 					<value>7</value>
 					<value>8</value>
 					<value>9</value>
+					<value>10</value>
 				</list>
 				<list>
 					<value>0</value>
@@ -67,11 +68,12 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 					<value>7</value>
 					<value>8</value>
 					<value>9</value>
+					<value>10</value>
 				</list>
 			</list>
 		</constructor-arg>
 		<constructor-arg index="6" value="9223372036854775807" />
-		<!--<constructor-arg index="6" value="100" />-->
+		<!--<constructor-arg index="6" value="100"/>-->
 	</bean>
 
 	<bean id="column.comparison.code" class="org.diffkit.diff.engine.DKColumnComparison">
@@ -142,13 +144,15 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="1" ref="sinkConnectionSource" />
 		<constructor-arg index="2" ref="table.comparison" />
 		<constructor-arg index="3" value="diff_product" />
-		<constructor-arg index="4" value="ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" />
+		<constructor-arg index="4" value="ENGINE=InnoDB DEFAULT CHARSET=utf8" />
 		<constructor-arg index="5" ref="lhs.source" />
 		<constructor-arg index="6" value="0" />
-		<constructor-arg index="7" value="" />
-		<constructor-arg index="8" value="" />
+		<constructor-arg index="7" ref="lhs.source" />
+		<constructor-arg index="8" ref="rhs.source" />
 		<constructor-arg index="9" value="" />
-		<constructor-arg index="10" ref="exclude.config" />
+		<constructor-arg index="10" value="" />
+		<constructor-arg index="11" value="" />
+		<constructor-arg index="12" ref="exclude.config" />
 	</bean>
 
     <bean id="exclude.config" class="org.diffkit.diff.custom.DKDBExcludeConfig">
@@ -185,6 +189,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 				<ref bean="lhs.column.workStation" />
 				<ref bean="lhs.column.status" />
 				<ref bean="lhs.column.createdDate" />
+				<ref bean="lhs.column.updatedDate" />
 			</list>
 		</constructor-arg>
 		<constructor-arg index="2">
@@ -251,7 +256,13 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<bean id="lhs.column.createdDate" class="org.diffkit.diff.engine.DKColumnModel">
 		<constructor-arg index="0" value="9" />
 		<constructor-arg index="1" value="CREATED_DATE" />
-		<constructor-arg index="2" value="TIMESTAMP" />
+		<constructor-arg index="2" value="DATE" />
+	</bean>
+
+	<bean id="lhs.column.updatedDate" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="10" />
+		<constructor-arg index="1" value="UPDATED_DATE" />
+		<constructor-arg index="2" value="DATE" />
 	</bean>
 
 	<!-- YF database config -->
@@ -282,6 +293,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 				<ref bean="rhs.column.workStation" />
 				<ref bean="rhs.column.status" />
 				<ref bean="rhs.column.createdDate" />
+				<ref bean="rhs.column.updatedDate" />
 			</list>
 		</constructor-arg>
 		<constructor-arg index="2">
@@ -348,7 +360,13 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<bean id="rhs.column.createdDate" class="org.diffkit.diff.engine.DKColumnModel">
 		<constructor-arg index="0" value="9" />
 		<constructor-arg index="1" value="CREATE_DATE" />
-		<constructor-arg index="2" value="STRING" />
+		<constructor-arg index="2" value="DATE" />
+	</bean>
+
+	<bean id="rhs.column.updatedDate" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="10" />
+		<constructor-arg index="1" value="MODI_DATE" />
+		<constructor-arg index="2" value="DATE" />
 	</bean>
 
 </beans>

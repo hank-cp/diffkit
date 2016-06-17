@@ -324,6 +324,8 @@ public enum DKDBType {
          return WriteType.TIMESTAMP;
       case _SQLSERVER_DATETIME:
          return WriteType.TIMESTAMP;
+      case _MYSQL_DATETIME:
+         return WriteType.DATE;
 
       default:
          throw new RuntimeException(String.format(

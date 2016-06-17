@@ -83,11 +83,12 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="4" value="ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" />
 		<constructor-arg index="5" ref="lhs.source" />
 		<constructor-arg index="6" value="0"/>
-		<constructor-arg index="7" value=""/>
-		<constructor-arg index="8" value=""/>
+		<constructor-arg index="7" ref="lhs.source" />
+		<constructor-arg index="8" ref="rhs.source" />
 		<constructor-arg index="9" value=""/>
-		<constructor-arg index="10" ref="exclude.config" />
-        <constructor-arg index="11" value="1024" />
+		<constructor-arg index="10" value=""/>
+		<constructor-arg index="11" value=""/>
+		<constructor-arg index="12" ref="exclude.config" />
 	</bean>
 
     <bean id="exclude.config" class="org.diffkit.diff.custom.DKDBExcludeConfig">
