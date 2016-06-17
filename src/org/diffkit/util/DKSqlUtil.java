@@ -88,8 +88,8 @@ public class DKSqlUtil {
       if (dbMeta == null)
          return null;
       Map<String, Object> info = new HashMap<String, Object>();
-      info.put(DATABASE_MAJOR_VERSION_KEY, new Integer(dbMeta.getDatabaseMajorVersion()));
-      info.put(DATABASE_MINOR_VERSION_KEY, new Integer(dbMeta.getDatabaseMinorVersion()));
+      info.put(DATABASE_MAJOR_VERSION_KEY, dbMeta.getDatabaseMajorVersion());
+      info.put(DATABASE_MINOR_VERSION_KEY, dbMeta.getDatabaseMinorVersion());
       info.put(DATABASE_PRODUCT_NAME_KEY, dbMeta.getDatabaseProductName());
       info.put(DATABASE_PRODUCT_VERSION_KEY, dbMeta.getDatabaseProductVersion());
       return info;
