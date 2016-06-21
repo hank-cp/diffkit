@@ -287,7 +287,10 @@ public class DKCustomDBSink extends DKAbstractSink {
                 DKColumnModel sourceColumnModal = source.getModel().getColumn(columnName);
                 DKDBColumn column = new DKDBColumn((sideIdx == 0 ? "lhs_" : "rhs_")+columnName,
                         columnIdx+(_displayColumnNames[sideIdx].length*sideIdx)+1,
-                        (sourceColumnModal._type == DKColumnModel.Type.DATE ? "DATETIME" : "VARCHAR"),
+                        (sourceColumnModal._type == DKColumnModel.Type.DATE
+                                || sourceColumnModal._type == DKColumnModel.Type.TIME
+                                || sourceColumnModal._type == DKColumnModel.Type.TIMESTAMP
+                                ? "DATETIME" : "VARCHAR"),
                         sourceColumn.getSize(), true);
                 columns.add(column);
             }

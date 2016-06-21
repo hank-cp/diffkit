@@ -199,7 +199,7 @@ public class DKTableModelUtil {
       case VARBINARY:
          return DKColumnModel.Type.STRING;
       case _MYSQL_DATETIME:
-         return DKColumnModel.Type.TIMESTAMP;
+         return DKColumnModel.Type.TIME;
       default:
          throw new RuntimeException(String.format("unrecognized dbType_->%s", dbType_));
       }
