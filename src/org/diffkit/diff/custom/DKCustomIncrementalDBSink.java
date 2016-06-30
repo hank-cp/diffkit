@@ -195,14 +195,14 @@ public class DKCustomIncrementalDBSink extends DKAbstractSink {
             }
         } else row.put("DIFF", "0");
         //createDate
-        String now = null;
+        String timestamp = null;
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            now = sdf.format(new Date());
+            timestamp = sdf.format(new Date());
         } catch (Exception ex) {
             //ignore
         }
-        row.put("RECORD_DATE",now);
+        row.put("RECORD_DATE",timestamp);
 
         for (int sideIdx=0; sideIdx<2; sideIdx++) {
             for (int columnIdx=0; columnIdx<_displayColumnNames[sideIdx].length; columnIdx++) {

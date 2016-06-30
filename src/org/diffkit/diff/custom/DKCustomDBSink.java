@@ -32,10 +32,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author hank_cp
@@ -249,12 +246,21 @@ public class DKCustomDBSink extends DKAbstractSink {
                         // still in same row, skip to record
                         return null;
                     }
-
+                    row.put("DIFF_COLUMN_POSITION",diff_.getColumnStep());//at this position ,record first time col diff
                     row.put("DIFF", "3");
                     break;
             }
         } else row.put("DIFF", "0");
 
+        //createDate
+        String timestamp = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            timestamp = sdf.format(new Date());
+        } catch (Exception ex) {
+            //ignore
+        }
+        row.put("RECORD_DATE",timestamp);
         for (int sideIdx=0; sideIdx<2; sideIdx++) {
             for (int columnIdx=0; columnIdx<_displayColumnNames[sideIdx].length; columnIdx++) {
                 String columnName = _displayColumnNames[sideIdx][columnIdx];
@@ -297,6 +303,9 @@ public class DKCustomDBSink extends DKAbstractSink {
         }
 
         columns.add(new DKDBColumn("DIFF", columns.size(), "VARCHAR", 128, true));
+        columns.add(new DKDBColumn("DIFF_COLUMN_POSITION", columns.size(), "VARCHAR", 15, true));
+        //record createDate
+        columns.add(new DKDBColumn("RECORD_DATE", columns.size(), "DATETIME", 128, true));
         DKDBColumn[] columnArray = columns.toArray(new DKDBColumn[columns.size()]);
         return new DKDBTable(null, null, _diffTableName, columnArray, null,
                 _diffResultTableDDLExtra);
