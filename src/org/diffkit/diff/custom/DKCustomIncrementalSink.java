@@ -202,7 +202,7 @@ public class DKCustomIncrementalSink extends DKAbstractSink {
         } catch (Exception ex) {
             //ignore
         }
-        row.put("CREATE_DATE",now);
+        row.put("RECORD_DATE",now);
 
         for (int sideIdx=0; sideIdx<2; sideIdx++) {
             for (int columnIdx=0; columnIdx<_displayColumnNames[sideIdx].length; columnIdx++) {
@@ -251,7 +251,7 @@ public class DKCustomIncrementalSink extends DKAbstractSink {
         columns.add(new DKDBColumn("DIFF", columns.size(), "VARCHAR", 128, true));
         columns.add(new DKDBColumn("DIFF_COLUMN_POSITION", columns.size(), "VARCHAR", 15, true));
         //record createDate
-        columns.add(new DKDBColumn("CREATE_DATE", columns.size(), "DATETIME", 128, true));
+        columns.add(new DKDBColumn("RECORD_DATE", columns.size(), "DATETIME", 128, true));
 
         DKDBColumn[] columnArray = columns.toArray(new DKDBColumn[columns.size()]);
         return new DKDBTable(null, null, _diffTableName, columnArray, null,

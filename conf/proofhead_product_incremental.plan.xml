@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="plan" class="org.diffkit.diff.conf.DKPassthroughPlan">
+		<property name="lhsSource" ref="lhs.source" />
+		<property name="rhsSource" ref="rhs.source" />
+		<property name="sink" ref="sink.db" />
+		<property name="tableComparison" ref="table.comparison" />
+	</bean>
+
+	<bean id="table.comparison" class="org.diffkit.diff.custom.DKCustomTableComparison">
+		<constructor-arg index="0" ref="lhs.table.model" />
+		<constructor-arg index="1" ref="rhs.table.model" />
+		<constructor-arg index="2" value="BOTH" />
+		<constructor-arg index="3">
+			<list>
+				<ref bean="column.comparison.code" />
+				<ref bean="column.comparison.name" />
+				<ref bean="column.comparison.spec" />
+				<ref bean="column.comparison.unit" />
+				<ref bean="column.comparison.materialControl" />
+				<ref bean="column.comparison.feature" />
+				<ref bean="column.comparison.wareHouse" />
+				<ref bean="column.comparison.workStation" />
+				<ref bean="column.comparison.status" />
+			</list>
+		</constructor-arg>
+		<constructor-arg index="4">
+			<list>
+				<value>0</value>
+				<value>1</value>
+				<value>2</value>
+				<value>3</value>
+				<value>4</value>
+				<value>5</value>
+				<value>6</value>
+				<value>7</value>
+				<value>8</value>
+			</list>
+		</constructor-arg>
+		<constructor-arg index="5">
+			<list>
+				<list>
+					<value>0</value>
+					<value>1</value>
+					<value>2</value>
+					<value>3</value>
+					<value>4</value>
+					<value>5</value>
+					<value>6</value>
+					<value>7</value>
+					<value>8</value>
+					<value>9</value>
+					<value>10</value>
+				</list>
+				<list>
+					<value>0</value>
+					<value>1</value>
+					<value>2</value>
+					<value>3</value>
+					<value>4</value>
+					<value>5</value>
+					<value>6</value>
+					<value>7</value>
+					<value>8</value>
+					<value>9</value>
+					<value>10</value>
+				</list>
+			</list>
+		</constructor-arg>
+		<constructor-arg index="6" value="9223372036854775807" />
+		<!--<constructor-arg index="6" value="100"/>-->
+	</bean>
+
+	<bean id="column.comparison.code" class="org.diffkit.diff.engine.DKColumnComparison">
+		<constructor-arg index="0" ref="lhs.column.code" />
+		<constructor-arg index="1" ref="rhs.column.code" />
+		<constructor-arg index="2" ref="equalsDiffor" />
+	</bean>
+
+	<bean id="column.comparison.name" class="org.diffkit.diff.engine.DKColumnComparison">
+		<constructor-arg index="0" ref="lhs.column.name" />
+		<constructor-arg index="1" ref="rhs.column.name" />
+		<constructor-arg index="2" ref="equalsDiffor" />
+	</bean>
+
+	<bean id="column.comparison.spec" class="org.diffkit.diff.engine.DKColumnComparison">
+		<constructor-arg index="0" ref="lhs.column.spec" />
+		<constructor-arg index="1" ref="rhs.column.spec" />
+		<constructor-arg index="2" ref="equalsDiffor" />
+	</bean>
+
+	<bean id="column.comparison.unit" class="org.diffkit.diff.engine.DKColumnComparison">
+		<constructor-arg index="0" ref="lhs.column.unit" />
+		<constructor-arg index="1" ref="rhs.column.unit" />
+		<constructor-arg index="2" ref="leagueDiffor" />
+	</bean>
+
+	<bean id="column.comparison.materialControl" class="org.diffkit.diff.engine.DKColumnComparison">
+		<constructor-arg index="0" ref="lhs.column.materialControl" />
+		<constructor-arg index="1" ref="rhs.column.materialControl" />
+		<constructor-arg index="2" ref="leagueDiffor" />
+	</bean>
+
+	<bean id="column.comparison.feature" class="org.diffkit.diff.engine.DKColumnComparison">
+		<constructor-arg index="0" ref="lhs.column.feature" />
+		<constructor-arg index="1" ref="rhs.column.feature" />
+		<constructor-arg index="2" ref="leagueDiffor" />
+	</bean>
+
+	<bean id="column.comparison.wareHouse" class="org.diffkit.diff.engine.DKColumnComparison">
+		<constructor-arg index="0" ref="lhs.column.wareHouse" />
+		<constructor-arg index="1" ref="rhs.column.wareHouse" />
+		<constructor-arg index="2" ref="leagueDiffor" />
+	</bean>
+
+	<bean id="column.comparison.workStation" class="org.diffkit.diff.engine.DKColumnComparison">
+		<constructor-arg index="0" ref="lhs.column.workStation" />
+		<constructor-arg index="1" ref="rhs.column.workStation" />
+		<constructor-arg index="2" ref="leagueDiffor" />
+	</bean>
+
+	<bean id="column.comparison.status" class="org.diffkit.diff.engine.DKColumnComparison">
+		<constructor-arg index="0" ref="lhs.column.status" />
+		<constructor-arg index="1" ref="rhs.column.status" />
+		<constructor-arg index="2" ref="statusDiffor" />
+	</bean>
+
+	<bean id="equalsDiffor" class="org.diffkit.diff.diffor.DKEqualsDiffor"
+		factory-method="getInstance" />
+
+	<bean id="numberDiffor" class="org.diffkit.diff.diffor.DKNumberDiffor"
+		  factory-method="getInstance" />
+
+	<bean id="statusDiffor" class="org.diffkit.diff.custom.DKStatusDiffor"
+		  factory-method="getInstance" />
+
+	<bean id="leagueDiffor" class="org.diffkit.diff.custom.DKLeagueDiffor"
+		  factory-method="getInstance" />
+
+	<bean id="sink.db" class="org.diffkit.diff.custom.DKCustomIncrementalSink">
+		<constructor-arg index="0" ref="sinkConnectionSource" />
+		<constructor-arg index="1" ref="table.comparison" />
+		<constructor-arg index="2" value="diff_product" />
+		<constructor-arg index="3" value="ENGINE=InnoDB DEFAULT CHARSET=utf8" />
+		<constructor-arg index="4" ref="lhs.source" />
+		<constructor-arg index="5" value="0"/>
+		<constructor-arg index="6" ref="lhs.source" />
+		<constructor-arg index="7" ref="rhs.source" />
+		<constructor-arg index="8" value=""/>
+		<constructor-arg index="9" value=""/>
+		<constructor-arg index="10" value=""/>
+		<constructor-arg index="11" value="true" />
+	</bean>
+
+    <bean id="exclude.config" class="org.diffkit.diff.custom.DKDBExcludeConfig">
+        <constructor-arg index="0" ref="atsConnectionSource" />
+        <constructor-arg index="1" value="ng_proofhead_product_white_list" />
+        <constructor-arg index="2" value="CODE" />
+    </bean>
+
+	<!-- ATS database config -->
+	<bean id="lhs.source" class="org.diffkit.diff.sns.DKDBSource">
+		<constructor-arg index="0" value="ng_proofhead_product_view" />
+		<constructor-arg index="1" value="" />
+		<constructor-arg index="2" ref="atsConnectionSource" />
+		<constructor-arg index="3" ref="lhs.table.model" />
+		<constructor-arg index="4">
+			<list>
+				<value>CODE</value>
+			</list>
+		</constructor-arg>
+		<constructor-arg index="5"><null /></constructor-arg>
+	</bean>
+	
+	<bean id="lhs.table.model" class="org.diffkit.diff.engine.DKTableModel">
+        <constructor-arg index="0" value="ng_proofhead_product_view" />
+		<constructor-arg index="1">
+			<list>
+				<ref bean="lhs.column.code" />
+				<ref bean="lhs.column.name" />
+				<ref bean="lhs.column.spec" />
+				<ref bean="lhs.column.unit" />
+				<ref bean="lhs.column.materialControl" />
+				<ref bean="lhs.column.feature" />
+				<ref bean="lhs.column.wareHouse" />
+				<ref bean="lhs.column.workStation" />
+				<ref bean="lhs.column.status" />
+				<ref bean="lhs.column.createdDate" />
+				<ref bean="lhs.column.updatedDate" />
+			</list>
+		</constructor-arg>
+		<constructor-arg index="2">
+			<list>
+				<value>0</value>
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean id="lhs.column.code" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="0" />
+		<constructor-arg index="1" value="CODE" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="lhs.column.name" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="1" />
+		<constructor-arg index="1" value="NAME" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="lhs.column.spec" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="2" />
+		<constructor-arg index="1" value="SPEC" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="lhs.column.unit" class="org.diffkit.diff.engine.DKColumnModel">
+	<constructor-arg index="0" value="3" />
+	<constructor-arg index="1" value="UNIT" />
+	<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="lhs.column.materialControl" class="org.diffkit.diff.engine.DKColumnModel">
+	<constructor-arg index="0" value="4" />
+	<constructor-arg index="1" value="MATERIAL_CONTROL" />
+	<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="lhs.column.feature" class="org.diffkit.diff.engine.DKColumnModel">
+	<constructor-arg index="0" value="5" />
+	<constructor-arg index="1" value="FEATURE" />
+	<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="lhs.column.wareHouse" class="org.diffkit.diff.engine.DKColumnModel">
+	<constructor-arg index="0" value="6" />
+	<constructor-arg index="1" value="WARE_HOUSE" />
+	<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="lhs.column.workStation" class="org.diffkit.diff.engine.DKColumnModel">
+	<constructor-arg index="0" value="7" />
+	<constructor-arg index="1" value="WORK_STATION" />
+	<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="lhs.column.status" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="8" />
+		<constructor-arg index="1" value="STATUS" />
+		<constructor-arg index="2" value="INTEGER" />
+	</bean>
+
+	<bean id="lhs.column.createdDate" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="9" />
+		<constructor-arg index="1" value="CREATED_DATE" />
+		<constructor-arg index="2" value="TIME" />
+	</bean>
+
+	<bean id="lhs.column.updatedDate" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="10" />
+		<constructor-arg index="1" value="UPDATED_DATE" />
+		<constructor-arg index="2" value="TIME" />
+	</bean>
+
+	<!-- YF database config -->
+	<bean id="rhs.source" class="org.diffkit.diff.sns.DKDBSource">
+		<constructor-arg index="0" value="invmb" />
+		<constructor-arg index="1" value="" />
+		<constructor-arg index="2" ref="yfConnectionSource" />
+		<constructor-arg index="3" ref="rhs.table.model" />
+		<constructor-arg index="4">
+			<list>
+				<value>MB001</value>
+			</list>
+		</constructor-arg>
+		<constructor-arg index="5"><null /></constructor-arg>
+	</bean>
+
+	<bean id="rhs.table.model" class="org.diffkit.diff.engine.DKTableModel">
+        <constructor-arg index="0" value="invmb" />
+		<constructor-arg index="1">
+			<list>
+				<ref bean="rhs.column.code" />
+				<ref bean="rhs.column.name" />
+				<ref bean="rhs.column.spec" />
+				<ref bean="rhs.column.unit" />
+				<ref bean="rhs.column.materialControl" />
+				<ref bean="rhs.column.feature" />
+				<ref bean="rhs.column.wareHouse" />
+				<ref bean="rhs.column.workStation" />
+				<ref bean="rhs.column.status" />
+				<ref bean="rhs.column.createdDate" />
+				<ref bean="rhs.column.updatedDate" />
+			</list>
+		</constructor-arg>
+		<constructor-arg index="2">
+			<list>
+				<value>0</value>
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean id="rhs.column.code" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="0" />
+		<constructor-arg index="1" value="MB001" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="rhs.column.name" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="1" />
+		<constructor-arg index="1" value="MB002" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="rhs.column.spec" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="2" />
+		<constructor-arg index="1" value="MB003" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="rhs.column.unit" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="3" />
+		<constructor-arg index="1" value="MB004" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="rhs.column.materialControl" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="4" />
+		<constructor-arg index="1" value="MB005" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="rhs.column.feature" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="5" />
+		<constructor-arg index="1" value="MB025" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="rhs.column.wareHouse" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="6" />
+		<constructor-arg index="1" value="MB017" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="rhs.column.workStation" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="7" />
+		<constructor-arg index="1" value="MB068" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="rhs.column.status" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="8" />
+		<constructor-arg index="1" value="MB109" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="rhs.column.createdDate" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="9" />
+		<constructor-arg index="1" value="CREATE_DATE" />
+		<constructor-arg index="2" value="TIME" />
+	</bean>
+
+	<bean id="rhs.column.updatedDate" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="10" />
+		<constructor-arg index="1" value="MODI_DATE" />
+		<constructor-arg index="2" value="TIME" />
+	</bean>
+
+</beans>
