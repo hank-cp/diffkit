@@ -268,7 +268,6 @@ public class DKDBSource implements DKSource {
       String orderBy = this.generateOrderByClause();
       if (orderBy != null)
          builder.append("\n" + orderBy);
-      System.out.println("query Sql:" + builder.toString());
       return builder.toString();
    }
 
@@ -292,7 +291,6 @@ public class DKDBSource implements DKSource {
       } else {
          builder.append("\n AND " + appendParams(primaryKeyName, extraParam));
       }
-
       return builder.toString();
    }
 
