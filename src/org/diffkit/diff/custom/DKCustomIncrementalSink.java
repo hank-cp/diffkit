@@ -173,7 +173,6 @@ public class DKCustomIncrementalSink extends DKAbstractSink {
 
     private Map<String, ?> createRow(DKDiff diff_, Object[] lhsData, Object[] rhsData, DKContext context_) {
         Map<String, Object> row = new HashMap<>();
-
         if (diff_ != null) {
             switch (diff_.getKind()) {
                 case ROW_DIFF:
@@ -190,7 +189,7 @@ public class DKCustomIncrementalSink extends DKAbstractSink {
                         // still in same row, skip to record
                         return null;
                     }
-                    //row.put("DIFF_COLUMN",context_._rowStep);//at this position ,record first time col diff
+                    row.put("DIFF_COLUMN_POSITION",diff_.getColumnStep());//at this position ,record first time col diff
                     row.put("DIFF", "3");
                     break;
             }
@@ -250,7 +249,7 @@ public class DKCustomIncrementalSink extends DKAbstractSink {
         }
 
         columns.add(new DKDBColumn("DIFF", columns.size(), "VARCHAR", 128, true));
-        //columns.add(new DKDBColumn("DIFF_COLUMN", columns.size(), "VARCHAR", 15, true));
+        columns.add(new DKDBColumn("DIFF_COLUMN_POSITION", columns.size(), "VARCHAR", 15, true));
         //record createDate
         columns.add(new DKDBColumn("CREATE_DATE", columns.size(), "DATETIME", 128, true));
 
