@@ -278,18 +278,18 @@ public class DKDBSource implements DKSource {
       //add Extra param
       DKContext context = this.getDKContext();
       if (null == context) return null;
-      Object obj = context.getUserDictionary().get(DKContext.UserKey.EXTRA_PARAM);
+      Object obj = context.getUserDictionary().get(DKContext.UserKey.EXTRA_PARAM_KEY);
       if (null == obj) return null;
       String extraParam = (String)obj;
-      DKDBPrimaryKey primaryKey = this.getTable().getPrimaryKey();
-      if (primaryKey == null) return null;
+      String[] primaryKeyNames = getOrderByColumnNames();
+      if (primaryKeyNames == null || primaryKeyNames.length <= 0) return null;
       StringBuilder builder = new StringBuilder();
       if (_whereClause == null || "".equals(_whereClause)) {
          builder.append("\n WHERE " + _database.getSqlGenerator().generateIdentifierString(
-                 primaryKey.getColumnNames()[0]) + "=" + extraParam);
+                 primaryKeyNames[0]) + "=" + extraParam);
       } else {
          builder.append("\n AND " + _database.getSqlGenerator().generateIdentifierString(
-                 primaryKey.getColumnNames()[0]) + "=" + extraParam);
+                 primaryKeyNames[0]) + "=" + extraParam);
       }
 
       return builder.toString();

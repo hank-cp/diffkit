@@ -388,6 +388,7 @@ public class DKDatabase {
       } catch (Exception ex) {
          //ignore delete ex
          System.err.println("Before insert, delete record error" + ex.getMessage());
+         return false;
       }
 
       boolean insert = DKSqlUtil.executeUpdate(insertSql, connection);

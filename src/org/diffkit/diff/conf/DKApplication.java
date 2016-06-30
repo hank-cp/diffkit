@@ -67,7 +67,7 @@ public class DKApplication {
    private static final String PLAN_FILE_OPTION_KEY = "planfiles";
    private static final String ERROR_ON_DIFF_OPTION_KEY = "errorOnDiff";
    private static final String DEMO_DB_OPTION_KEY = "demoDB";
-   private static final String USER_EXTRA_PARAM_KEY = "extraParam";
+   private static final String USER_EXTRA_PARAM_KEY = "extraParam.key";
    private static final Options OPTIONS = new Options();
 
    private static final String LOGBACK_FILE_NAME = "logback.xml";
@@ -179,7 +179,7 @@ public class DKApplication {
    /**
     * modify by zhen 20160629
     * **/
-   private static void runPlan(String planFilesString_, String extraParam_,boolean errorOnDiff_)
+   private static void runPlan(String planFilesString_, String extraParamKey_, boolean errorOnDiff_)
            throws Exception {
       Logger systemLog = getSystemLog();
       Logger userLog = DKRuntime.getInstance().getUserLog();
@@ -199,7 +199,7 @@ public class DKApplication {
       userLog.info("tableComparison->{}", tableComparison);
       Map<UserKey, Object> userDictionary = new HashMap<UserKey, Object>();
       userDictionary.put(UserKey.PLAN_FILES, planFilesString_);
-      userDictionary.put(UserKey.EXTRA_PARAM,extraParam_);
+      userDictionary.put(UserKey.EXTRA_PARAM_KEY, extraParamKey_);
       DKContext diffContext = doDiff(lhsSource, rhsSource, sink, tableComparison,
               userDictionary);
       userLog.info(sink.generateSummary(diffContext));

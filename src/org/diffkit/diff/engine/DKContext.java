@@ -32,7 +32,7 @@ import org.diffkit.common.DKValidate;
 public class DKContext {
 
    public enum UserKey {
-      EXTRA_PARAM,PLAN_FILES, DIFF_COLUMN_NAMES, IGNORE_COLUMN_NAMES, NUMBER_TOLERANCE;
+      PLAN_FILES, DIFF_COLUMN_NAMES, IGNORE_COLUMN_NAMES, NUMBER_TOLERANCE, EXTRA_PARAM_KEY;
    }
 
    public final DKSource _lhs;
