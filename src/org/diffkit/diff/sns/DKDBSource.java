@@ -76,6 +76,8 @@ public class DKDBSource implements DKSource {
    private final Logger _log = LoggerFactory.getLogger(this.getClass());
    private final boolean _isDebug = _log.isDebugEnabled();
 
+   private DKContext _context;
+
    public DKDBSource(String tableName_, String whereClause_, DKDatabase database_,
                      DKTableModel model_, String[] keyColumnNames_, int[] readColumnIdxs_)
       throws SQLException {
@@ -136,6 +138,7 @@ public class DKDBSource implements DKSource {
    public void open(DKContext context_) throws IOException {
       this.ensureNotOpen();
       try {
+         setDKContext(context_);
          _readColumnNames = _model.getColumnNames();
          _readTypes = _table.getReadTypes(_readColumnNames, _database);
          _connection = _database.getConnection();
@@ -156,6 +159,21 @@ public class DKDBSource implements DKSource {
          throw new RuntimeException(e_);
       }
    }
+
+   /**
+    * add by zhen 20160629
+    * **/
+   private void setDKContext(DKContext context_) {
+      this._context = context_;
+   }
+
+   /**
+    * add by zhen 20160629
+    * **/
+   private DKContext getDKContext() {
+      return this._context;
+   }
+
 
    public String toString() {
       try {
@@ -226,7 +244,7 @@ public class DKDBSource implements DKSource {
 
    private ResultSet createResultSet() throws SQLException {
       return DKSqlUtil.executeQuery(this.generateSelectString(), _connection,
-         DEFAULT_FETCH_SIZE);
+              DEFAULT_FETCH_SIZE);
    }
 
    private String generateSelectString() throws SQLException {
@@ -243,9 +261,37 @@ public class DKDBSource implements DKSource {
          }
          builder.append("\n" + whereClause);
       }
+      String extraParam = this.getExtraParamClause();
+      if (null != extraParam && !"".equals(extraParam))
+         builder.append(extraParam);
+
       String orderBy = this.generateOrderByClause();
       if (orderBy != null)
          builder.append("\n" + orderBy);
+      return builder.toString();
+   }
+
+   /**
+    * add by zhen 20160629
+    * **/
+   private String getExtraParamClause()  throws SQLException {
+      //add Extra param
+      DKContext context = this.getDKContext();
+      if (null == context) return null;
+      Object obj = context.getUserDictionary().get(DKContext.UserKey.EXTRA_PARAM);
+      if (null == obj) return null;
+      String extraParam = (String)obj;
+      DKDBPrimaryKey primaryKey = this.getTable().getPrimaryKey();
+      if (primaryKey == null) return null;
+      StringBuilder builder = new StringBuilder();
+      if (_whereClause == null || "".equals(_whereClause)) {
+         builder.append("\n WHERE " + _database.getSqlGenerator().generateIdentifierString(
+                 primaryKey.getColumnNames()[0]) + "=" + extraParam);
+      } else {
+         builder.append("\n AND " + _database.getSqlGenerator().generateIdentifierString(
+                 primaryKey.getColumnNames()[0]) + "=" + extraParam);
+      }
+
       return builder.toString();
    }
 

@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.diffkit.db.DKDBTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,6 +94,25 @@ public class DKSqlUtil {
       info.put(DATABASE_PRODUCT_NAME_KEY, dbMeta.getDatabaseProductName());
       info.put(DATABASE_PRODUCT_VERSION_KEY, dbMeta.getDatabaseProductVersion());
       return info;
+   }
+
+   /**
+    * add by zhen 20160629
+    * judge table if exist
+    * **/
+   public static boolean judgeTableIfExist(DKDBTable table_, Connection connection_) {
+      boolean exist = false;
+      if (null == table_) {
+         return exist;
+      }
+      try {
+         ResultSet rs  = connection_.getMetaData().getTables(null, null, table_.getTableName(), null );
+         if (rs.next()) exist = true;
+      } catch (Exception ex) {
+         LOG.warn("Table_: " + table_.getTableName() + " does not exist.");
+         //ignore
+      }
+      return  exist;
    }
 
    public static String formatForSql(Object value_, WriteType type_) {

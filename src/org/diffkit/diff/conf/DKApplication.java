@@ -67,6 +67,7 @@ public class DKApplication {
    private static final String PLAN_FILE_OPTION_KEY = "planfiles";
    private static final String ERROR_ON_DIFF_OPTION_KEY = "errorOnDiff";
    private static final String DEMO_DB_OPTION_KEY = "demoDB";
+   private static final String USER_EXTRA_PARAM_KEY = "extraParam";
    private static final Options OPTIONS = new Options();
 
    private static final String LOGBACK_FILE_NAME = "logback.xml";
@@ -77,7 +78,7 @@ public class DKApplication {
    static {
       OptionGroup optionGroup = new OptionGroup();
       optionGroup.addOption(new Option(VERSION_OPTION_KEY,
-         "print the version information and exit"));
+              "print the version information and exit"));
       optionGroup.addOption(new Option(HELP_OPTION_KEY, "print this message"));
 
       OptionBuilder.hasOptionalArgs(2);
@@ -89,19 +90,28 @@ public class DKApplication {
       OptionBuilder.hasArg();
       OptionBuilder.withDescription("perform diff using given file(s) for plan");
       optionGroup.addOption(OptionBuilder.create(PLAN_FILE_OPTION_KEY));
+
       optionGroup.addOption(new Option(
          ERROR_ON_DIFF_OPTION_KEY,
          "exit with error status code (-1) if diffs are detected. otherwise will always exit with 0 unless an operating Exception was encountered"));
       optionGroup.addOption(new Option(DEMO_DB_OPTION_KEY,
          "run embedded demo H2 database"));
       OPTIONS.addOptionGroup(optionGroup);
+
+      /**
+       * add by zhen 20160629
+       * **/
+      OptionBuilder.withArgName("property=value");
+      OptionBuilder.hasArg();
+      OptionBuilder.withValueSeparator();
+      OptionBuilder.withDescription("extra param use for query");
+      OPTIONS.addOption(OptionBuilder.create(USER_EXTRA_PARAM_KEY));
    }
 
    public static void main(String[] args_) {
       initialize();
       Logger systemLog = getSystemLog();
       systemLog.debug("args_->{}", Arrays.toString(args_));
-
       try {
          CommandLineParser parser = new PosixParser();
          CommandLine line = parser.parse(OPTIONS, args_);
@@ -111,9 +121,16 @@ public class DKApplication {
             printHelp();
          else if (line.hasOption(TEST_OPTION_KEY))
             runTestCases(line.getOptionValues(TEST_OPTION_KEY));
-         else if (line.hasOption(PLAN_FILE_OPTION_KEY))
-            runPlan(line.getOptionValue(PLAN_FILE_OPTION_KEY),
-               line.hasOption(ERROR_ON_DIFF_OPTION_KEY));
+         else if (line.hasOption(PLAN_FILE_OPTION_KEY)) {
+            if (line.hasOption(USER_EXTRA_PARAM_KEY)) {
+               runPlan(line.getOptionValue(PLAN_FILE_OPTION_KEY),
+                       line.getOptionValue(USER_EXTRA_PARAM_KEY),
+                       line.hasOption(ERROR_ON_DIFF_OPTION_KEY));
+            } else {
+               runPlan(line.getOptionValue(PLAN_FILE_OPTION_KEY),
+                       line.hasOption(ERROR_ON_DIFF_OPTION_KEY));
+            }
+         }
          else if (line.hasOption(DEMO_DB_OPTION_KEY))
             runDemoDB();
          else
@@ -138,7 +155,7 @@ public class DKApplication {
 
    private static void printVersion() {
       DKRuntime.getInstance().getUserLog().info(
-         "version->" + DKDistProperties.getPublicVersionString());
+              "version->" + DKDistProperties.getPublicVersionString());
       System.exit(0);
    }
 
@@ -156,13 +173,21 @@ public class DKApplication {
 
    private static void runPlan(String planFilesString_, boolean errorOnDiff_)
       throws Exception {
+      runPlan(planFilesString_, null, errorOnDiff_);
+   }
+
+   /**
+    * modify by zhen 20160629
+    * **/
+   private static void runPlan(String planFilesString_, String extraParam_,boolean errorOnDiff_)
+           throws Exception {
       Logger systemLog = getSystemLog();
       Logger userLog = DKRuntime.getInstance().getUserLog();
       systemLog.info("planFilesString_->{}", planFilesString_);
       String[] planFiles = planFilesString_.split("\\,");
       userLog.info("planfile(s)->{}", Arrays.toString(planFiles));
       DKPlan plan = (DKPlan) DKSpringUtil.getBean("plan", planFiles,
-         DKApplication.class.getClassLoader());
+              DKApplication.class.getClassLoader());
       systemLog.info("plan->{}", plan);
       DKSource lhsSource = plan.getLhsSource();
       DKSource rhsSource = plan.getRhsSource();
@@ -174,8 +199,9 @@ public class DKApplication {
       userLog.info("tableComparison->{}", tableComparison);
       Map<UserKey, Object> userDictionary = new HashMap<UserKey, Object>();
       userDictionary.put(UserKey.PLAN_FILES, planFilesString_);
+      userDictionary.put(UserKey.EXTRA_PARAM,extraParam_);
       DKContext diffContext = doDiff(lhsSource, rhsSource, sink, tableComparison,
-         userDictionary);
+              userDictionary);
       userLog.info(sink.generateSummary(diffContext));
       if (plan.getSink().getDiffCount() == 0)
          System.exit(0);

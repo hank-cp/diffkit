@@ -27,6 +27,7 @@ import java.util.Properties;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.diffkit.diff.engine.DKContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -252,7 +253,7 @@ public class DKDatabase {
       if (table_ == null)
          return false;
       DKDBTable fetchedTable = _tableDataAccess.getTable(table_.getCatalog(),
-         table_.getSchema(), table_.getTableName());
+              table_.getSchema(), table_.getTableName());
       if (_log.isDebugEnabled())
          _log.debug("fetchedTable->{}", fetchedTable);
       if (fetchedTable == null)
@@ -298,7 +299,7 @@ public class DKDatabase {
                "keyValues.length->{} keyTypeInfos_.length->{} keyColumnNames_.length->{} don't match",
                keyValues.length, keyTypeInfos.length, keyColumnNames.length));
       return _sqlGenerator.generateDeleteDML(keyValues, keyTypeInfos, keyColumnNames,
-         table_.getSchema(), table_.getTableName());
+              table_.getSchema(), table_.getTableName());
    }
 
    /**
@@ -315,9 +316,9 @@ public class DKDatabase {
          || ArrayUtils.isEmpty(updateIndices_))
          return null;
       return _sqlGenerator.generateUpdateDML(rowValues_,
-         this.getColumnConcreteTypeInfos(table_), table_.getColumnNames(),
-         table_.getPrimaryKeyColumnIndices(), updateIndices_, table_.getSchema(),
-         table_.getTableName());
+              this.getColumnConcreteTypeInfos(table_), table_.getColumnNames(),
+              table_.getPrimaryKeyColumnIndices(), updateIndices_, table_.getSchema(),
+              table_.getTableName());
    }
 
    /**
@@ -363,6 +364,32 @@ public class DKDatabase {
       String insertSql = _sqlGenerator.generateInsertDML(row_, table_);
       _log.debug("insertSql->{}", insertSql);
       Connection connection = this.getConnection();
+      boolean insert = DKSqlUtil.executeUpdate(insertSql, connection);
+      // DKSqlUtil.close(connection);
+      return insert;
+   }
+
+   /**
+    * add by zhen 20160629
+    * when insert diff result,delete the record by lhs/rhs specify key
+    * to ensure the diff result table just have one proof record
+    * **/
+   public boolean insertRow(DKContext context_, Map<String, ?> row_, DKDBTable table_) throws SQLException {
+      if ((table_ == null) || (row_ == null))
+         return false;
+      String insertSql = _sqlGenerator.generateInsertDML(row_, table_);
+      _log.debug("insertSql->{}", insertSql);
+      Connection connection = this.getConnection();
+      try {
+         String deleteSql = _sqlGenerator.generateDeleteSQLBySpecifyPrimaryKey(context_, row_, table_);
+         if (null != deleteSql && !"".equals(deleteSql)) {
+            DKSqlUtil.executeUpdate(deleteSql, connection);
+         }
+      } catch (Exception ex) {
+         //ignore delete ex
+         System.err.println("Before insert, delete record error" + ex.getMessage());
+      }
+
       boolean insert = DKSqlUtil.executeUpdate(insertSql, connection);
       // DKSqlUtil.close(connection);
       return insert;
