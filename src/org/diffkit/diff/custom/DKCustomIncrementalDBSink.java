@@ -39,7 +39,7 @@ import java.util.*;
  * @author hank_cp
  * modify by zhen 20160629
  */
-public class DKCustomIncrementalSink extends DKAbstractSink {
+public class DKCustomIncrementalDBSink extends DKAbstractSink {
 
     private final DKDatabase _database;
     private final DKDBTable _diffTable;
@@ -60,18 +60,18 @@ public class DKCustomIncrementalSink extends DKAbstractSink {
 
     private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
-    public DKCustomIncrementalSink(DKDatabase database_,
-                                   DKCustomTableComparison comparison_,
-                                   String diffTableName_,
-                                   String diffResultTableDDLExtra_,
-                                   DKDBSource writeBackDataSource_,
-                                   int writeBackKeyIndex_,
-                                   DKDBSource lhsSource_,
-                                   DKDBSource rhsSource_,
-                                   String rowConsistenceWriteBackStatement_,
-                                   String rowDiffWriteBackStatement_,
-                                   String columnDiffWriteBackStatement_,
-                                   boolean dropResultTable) throws SQLException {
+    public DKCustomIncrementalDBSink(DKDatabase database_,
+                                     DKCustomTableComparison comparison_,
+                                     String diffTableName_,
+                                     String diffResultTableDDLExtra_,
+                                     DKDBSource writeBackDataSource_,
+                                     int writeBackKeyIndex_,
+                                     DKDBSource lhsSource_,
+                                     DKDBSource rhsSource_,
+                                     String rowConsistenceWriteBackStatement_,
+                                     String rowDiffWriteBackStatement_,
+                                     String columnDiffWriteBackStatement_,
+                                     boolean dropResultTable) throws SQLException {
         super(null);
         _database = database_;
         _displayColumnNames = comparison_.getDisplayColumnNames();

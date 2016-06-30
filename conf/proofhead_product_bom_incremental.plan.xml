@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="plan" class="org.diffkit.diff.conf.DKPassthroughPlan">
+		<property name="lhsSource" ref="lhs.source" />
+		<property name="rhsSource" ref="rhs.source" />
+		<property name="sink" ref="sink.db" />
+		<property name="tableComparison" ref="table.comparison" />
+	</bean>
+
+	<bean id="table.comparison" class="org.diffkit.diff.custom.DKCustomTableComparison">
+		<constructor-arg index="0" ref="lhs.table.model" />
+		<constructor-arg index="1" ref="rhs.table.model" />
+		<constructor-arg index="2" value="BOTH" />
+		<constructor-arg index="3">
+			<list>
+				<ref bean="column.comparison.code" />
+				<ref bean="column.comparison.bomDump" />
+				<ref bean="column.comparison.status" />
+			</list>
+		</constructor-arg>
+		<constructor-arg index="4">
+			<list>
+				<value>0</value>
+				<value>1</value>
+				<value>2</value>
+			</list>
+		</constructor-arg>
+		<constructor-arg index="5">
+			<list>
+				<list>
+					<value>0</value>
+					<value>1</value>
+					<value>2</value>
+				</list>
+				<list>
+					<value>0</value>
+					<value>1</value>
+					<value>2</value>
+				</list>
+			</list>
+		</constructor-arg>
+		<constructor-arg index="6" value="9223372036854775807" />
+		<!--<constructor-arg index="6" value="100" />-->
+	</bean>
+
+    <bean id="column.comparison.code" class="org.diffkit.diff.engine.DKColumnComparison">
+        <constructor-arg index="0" ref="lhs.column.code" />
+        <constructor-arg index="1" ref="rhs.column.code" />
+        <constructor-arg index="2" ref="equalsDiffor" />
+    </bean>
+
+	<bean id="column.comparison.bomDump" class="org.diffkit.diff.engine.DKColumnComparison">
+		<constructor-arg index="0" ref="lhs.column.bomDump" />
+		<constructor-arg index="1" ref="rhs.column.bomDump" />
+		<constructor-arg index="2" ref="equalsDiffor" />
+	</bean>
+
+	<bean id="column.comparison.status" class="org.diffkit.diff.engine.DKColumnComparison">
+		<constructor-arg index="0" ref="lhs.column.status" />
+		<constructor-arg index="1" ref="rhs.column.status" />
+		<constructor-arg index="2" ref="statusDiffor" />
+	</bean>
+
+	<bean id="equalsDiffor" class="org.diffkit.diff.diffor.DKEqualsDiffor"
+		factory-method="getInstance" />
+
+	<bean id="numberDiffor" class="org.diffkit.diff.diffor.DKNumberDiffor"
+		  factory-method="getInstance" />
+
+	<bean id="statusDiffor" class="org.diffkit.diff.custom.DKStatusDiffor"
+		  factory-method="getInstance" />
+
+	<bean id="sink.db" class="org.diffkit.diff.custom.DKCustomIncrementalDBSink">
+		<constructor-arg index="0" ref="sinkConnectionSource" />
+		<constructor-arg index="1" ref="table.comparison" />
+		<constructor-arg index="2" value="diff_product_bom" />
+		<constructor-arg index="3" value="ENGINE=InnoDB DEFAULT CHARSET=utf8" />
+		<constructor-arg index="4" ref="lhs.source" />
+		<constructor-arg index="5" value="0"/>
+		<constructor-arg index="6" ref="lhs.source" />
+		<constructor-arg index="7" ref="rhs.source" />
+		<constructor-arg index="8" value=""/>
+		<constructor-arg index="9" value=""/>
+		<constructor-arg index="10" value=""/>
+		<constructor-arg index="11" value="true" />
+	</bean>
+
+	<!-- ATS database config -->
+	<bean id="lhs.source" class="org.diffkit.diff.sns.DKDBSource">
+		<constructor-arg index="0" value="ng_product" />
+		<constructor-arg index="1" value="WHERE BOM_DUMP IS NOT NULL AND DIAG_STATUS = '1'" />
+		<constructor-arg index="2" ref="atsConnectionSource" />
+		<constructor-arg index="3" ref="lhs.table.model" />
+		<constructor-arg index="4">
+			<list>
+				<value>CODE</value>
+			</list>
+		</constructor-arg>
+		<constructor-arg index="5"><null /></constructor-arg>
+	</bean>
+	
+	<bean id="lhs.table.model" class="org.diffkit.diff.engine.DKTableModel">
+        <constructor-arg index="0" value="ng_product" />
+		<constructor-arg index="1">
+			<list>
+				<ref bean="lhs.column.code" />
+				<ref bean="lhs.column.bomDump" />
+				<ref bean="lhs.column.status" />
+			</list>
+		</constructor-arg>
+		<constructor-arg index="2">
+			<list>
+				<value>0</value>
+			</list>
+		</constructor-arg>
+	</bean>
+
+    <bean id="lhs.column.code" class="org.diffkit.diff.engine.DKColumnModel">
+        <constructor-arg index="0" value="0" />
+        <constructor-arg index="1" value="CODE" />
+        <constructor-arg index="2" value="STRING" />
+    </bean>
+
+	<bean id="lhs.column.bomDump" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="1" />
+		<constructor-arg index="1" value="BOM_DUMP" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="lhs.column.status" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="2" />
+		<constructor-arg index="1" value="STATUS" />
+		<constructor-arg index="2" value="INTEGER" />
+	</bean>
+
+	<!-- right cmp table ng_imported_product_bom config -->
+	<bean id="rhs.source" class="org.diffkit.diff.sns.DKDBSource">
+		<constructor-arg index="0" value="ng_imported_product_bom" />
+		<constructor-arg index="1" value="" />
+		<constructor-arg index="2" ref="atsConnectionSource" />
+		<constructor-arg index="3" ref="rhs.table.model" />
+		<constructor-arg index="4">
+			<list>
+				<value>CODE</value>
+			</list>
+		</constructor-arg>
+		<constructor-arg index="5"><null /></constructor-arg>
+	</bean>
+
+	<bean id="rhs.table.model" class="org.diffkit.diff.engine.DKTableModel">
+        <constructor-arg index="0" value="ng_imported_product_bom" />
+		<constructor-arg index="1">
+			<list>
+				<ref bean="rhs.column.code" />
+				<ref bean="rhs.column.bomDump" />
+				<ref bean="rhs.column.status" />
+			</list>
+		</constructor-arg>
+		<constructor-arg index="2">
+			<list>
+				<value>0</value>
+			</list>
+		</constructor-arg>
+	</bean>
+
+    <bean id="rhs.column.code" class="org.diffkit.diff.engine.DKColumnModel">
+        <constructor-arg index="0" value="0" />
+        <constructor-arg index="1" value="CODE" />
+        <constructor-arg index="2" value="STRING" />
+    </bean>
+
+    <bean id="rhs.column.bomDump" class="org.diffkit.diff.engine.DKColumnModel">
+        <constructor-arg index="0" value="1" />
+        <constructor-arg index="1" value="BOM_DUMP5" />
+        <constructor-arg index="2" value="STRING" />
+    </bean>
+
+    <bean id="rhs.column.status" class="org.diffkit.diff.engine.DKColumnModel">
+        <constructor-arg index="0" value="2" />
+        <constructor-arg index="1" value="APPROVAL_STATE" />
+        <constructor-arg index="2" value="STRING" />
+    </bean>
+
+</beans>

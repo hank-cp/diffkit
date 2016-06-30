@@ -142,7 +142,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<bean id="leagueDiffor" class="org.diffkit.diff.custom.DKLeagueDiffor"
 		  factory-method="getInstance" />
 
-	<bean id="sink.db" class="org.diffkit.diff.custom.DKCustomIncrementalSink">
+	<bean id="sink.db" class="org.diffkit.diff.custom.DKCustomIncrementalDBSink">
 		<constructor-arg index="0" ref="sinkConnectionSource" />
 		<constructor-arg index="1" ref="table.comparison" />
 		<constructor-arg index="2" value="diff_product" />
