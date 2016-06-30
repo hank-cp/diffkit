@@ -268,6 +268,7 @@ public class DKDBSource implements DKSource {
       String orderBy = this.generateOrderByClause();
       if (orderBy != null)
          builder.append("\n" + orderBy);
+      System.out.println("query Sql:" + builder.toString());
       return builder.toString();
    }
 
@@ -283,16 +284,31 @@ public class DKDBSource implements DKSource {
       String extraParam = (String)obj;
       String[] primaryKeyNames = getOrderByColumnNames();
       if (primaryKeyNames == null || primaryKeyNames.length <= 0) return null;
+      String primaryKeyName = _database.getSqlGenerator().generateIdentifierString(
+              primaryKeyNames[0]);
       StringBuilder builder = new StringBuilder();
       if (_whereClause == null || "".equals(_whereClause)) {
-         builder.append("\n WHERE " + _database.getSqlGenerator().generateIdentifierString(
-                 primaryKeyNames[0]) + "=" + extraParam);
+         builder.append("\n WHERE " + appendParams(primaryKeyName, extraParam));
       } else {
-         builder.append("\n AND " + _database.getSqlGenerator().generateIdentifierString(
-                 primaryKeyNames[0]) + "=" + extraParam);
+         builder.append("\n AND " + appendParams(primaryKeyName, extraParam));
       }
 
       return builder.toString();
+   }
+
+   private String appendParams(String primaryKeyName, String extraParam) {
+      StringBuilder appendSql = new StringBuilder();
+      String params[] = extraParam.split(",");
+      if (params.length == 1) {
+         appendSql.append(" " + primaryKeyName + " ='" + params[0] + "'");
+      } else {
+         appendSql.append(" " + primaryKeyName + " IN (");
+         for (int i = 0; i < params.length - 1; i++) {
+            appendSql.append("'" + params[i] + "', ");
+         }
+         appendSql.append("'" + params[params.length - 1] + "')");
+      }
+      return appendSql.toString();
    }
 
    private String generateOrderByClause() throws SQLException {
