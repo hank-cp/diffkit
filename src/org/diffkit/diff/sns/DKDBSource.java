@@ -26,6 +26,7 @@ import java.util.Arrays;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -262,7 +263,7 @@ public class DKDBSource implements DKSource {
          builder.append("\n" + whereClause);
       }
       String extraParam = this.getExtraParamClause();
-      if (null != extraParam && !"".equals(extraParam))
+      if (StringUtils.isNotEmpty(extraParam))
          builder.append(extraParam);
 
       String orderBy = this.generateOrderByClause();
@@ -286,7 +287,7 @@ public class DKDBSource implements DKSource {
       String primaryKeyName = _database.getSqlGenerator().generateIdentifierString(
               primaryKeyNames[0]);
       StringBuilder builder = new StringBuilder();
-      if (_whereClause == null || "".equals(_whereClause)) {
+      if (StringUtils.isEmpty(_whereClause)) {
          builder.append("\n WHERE " + appendParams(primaryKeyName, extraParam));
       } else {
          builder.append("\n AND " + appendParams(primaryKeyName, extraParam));
@@ -294,6 +295,9 @@ public class DKDBSource implements DKSource {
       return builder.toString();
    }
 
+   /**
+    * add by zhen 20160629
+    * **/
    private String appendParams(String primaryKeyName, String extraParam) {
       StringBuilder appendSql = new StringBuilder();
       String params[] = extraParam.split(",");

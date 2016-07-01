@@ -27,6 +27,7 @@ import java.util.Properties;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.diffkit.diff.engine.DKContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -382,7 +383,7 @@ public class DKDatabase {
       Connection connection = this.getConnection();
       try {
          String deleteSql = _sqlGenerator.generateDeleteSQLBySpecifyPrimaryKey(context_, row_, table_);
-         if (null != deleteSql && !"".equals(deleteSql)) {
+         if (StringUtils.isNotEmpty(deleteSql)) {
             DKSqlUtil.executeUpdate(deleteSql, connection);
          }
       } catch (Exception ex) {
