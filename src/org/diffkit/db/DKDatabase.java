@@ -369,33 +369,6 @@ public class DKDatabase {
       return insert;
    }
 
-   /**
-    * add by zhen 20160629
-    * when insert diff result,delete the record by lhs/rhs specify key
-    * to ensure the diff result table just have one proof record
-    * **/
-   public boolean insertRow(DKContext context_, Map<String, ?> row_, DKDBTable table_) throws SQLException {
-      if ((table_ == null) || (row_ == null))
-         return false;
-      String insertSql = _sqlGenerator.generateInsertDML(row_, table_);
-      _log.debug("insertSql->{}", insertSql);
-      Connection connection = this.getConnection();
-      try {
-         String deleteSql = _sqlGenerator.generateDeleteSQLBySpecifyPrimaryKey(context_, row_, table_);
-         if (null != deleteSql && !"".equals(deleteSql)) {
-            DKSqlUtil.executeUpdate(deleteSql, connection);
-         }
-      } catch (Exception ex) {
-         //ignore delete ex
-         System.err.println("Before insert, delete record error" + ex.getMessage());
-         return false;
-      }
-
-      boolean insert = DKSqlUtil.executeUpdate(insertSql, connection);
-      // DKSqlUtil.close(connection);
-      return insert;
-   }
-
    public List<Map<String, ?>> readAllRows(DKDBTable table_) throws SQLException {
       if (table_ == null)
          return null;

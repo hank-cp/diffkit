@@ -87,7 +87,6 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="8" value=""/>
 		<constructor-arg index="9" value=""/>
 		<constructor-arg index="10" value=""/>
-		<constructor-arg index="11" value="true" />
 	</bean>
 
 	<!-- ATS database config -->

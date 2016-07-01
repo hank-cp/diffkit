@@ -24,7 +24,6 @@ import java.util.Map;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
-import org.diffkit.diff.engine.DKContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -153,68 +152,6 @@ public class DKSqlGenerator {
               typeInfos.toArray(new DKDBTypeInfo[typeInfos.size()]),
               columnNames.toArray(new String[columnNames.size()]), table_.getSchema(),
               table_.getTableName());
-   }
-
-   /**
-    * add by zhen 20160629
-    * delete the record by lhs/rhs specify key
-    * **/
-   public String generateDeleteSQLBySpecifyPrimaryKey(DKContext context_, Map<String, ?> row_, DKDBTable table_)
-           throws SQLException {
-      if (_log.isDebugEnabled()) {
-         _log.debug("row_->{}", row_);
-         _log.debug("table_->{}", table_);
-      }
-      DKValidate.notNull(table_);
-      if (MapUtils.isEmpty(row_))
-         return null;
-      List<Object> values = new ArrayList<Object>(row_.size());
-      List<DKDBTypeInfo> typeInfos = new ArrayList<DKDBTypeInfo>(row_.size());
-      List<String> columnNames = new ArrayList<String>(row_.size());
-      DKDBColumn[] columns = table_.getColumns();
-      for (DKDBColumn column : columns) {
-         if (!row_.containsKey(column.getName()))
-            continue;
-         values.add(row_.get(column.getName()));
-         typeInfos.add(_database.getConcreteTypeInfo(column.getDBTypeName()));
-         columnNames.add(column.getName());
-      }
-      StringBuilder builder = new StringBuilder();
-      builder.append(String.format("DELETE FROM %s\n",
-              this.generateQualifiedTableIdentifierString( table_.getSchema(), table_.getTableName())));
-
-      String lhsSpecifyKey = "lhs_" + context_.getLhs().getModel().getKeyColumn().getName();
-      String rhsSpecifyKey = "rhs_" + context_.getRhs().getModel().getKeyColumn().getName();
-
-
-      String lhsKeyValue = "";
-      String rhsKeyValue = "";
-      String diffValue = "";
-
-      // find lhsKey/rhsKey & diff value in one record
-      for (int i = 0; i < values.size(); i++) {
-         if ("diff".equalsIgnoreCase(columnNames.get(i))) {
-            diffValue = "" + values.get(i);
-            continue;
-         }
-         if (lhsSpecifyKey.equalsIgnoreCase(columnNames.get(i))) {
-            lhsKeyValue = "" + values.get(i);
-            continue;
-         }
-         if (rhsSpecifyKey.equalsIgnoreCase(columnNames.get(i))) {
-            rhsKeyValue = "" + values.get(i);
-         }
-      }
-      // judge by lhsKey/rhsKey & diffValue
-      if ("0".equals(diffValue) || "3".equals(diffValue)) {
-         builder.append(" WHERE (" + lhsSpecifyKey + " = " + lhsKeyValue)
-                 .append( " OR " + rhsSpecifyKey + " = " + rhsKeyValue + ")");
-      } else if ("1".equals(diffValue)) {
-         builder.append(" WHERE " + rhsSpecifyKey + " = " + rhsKeyValue);
-      } else if ("2".equals(diffValue)) {
-         builder.append(" WHERE " + lhsSpecifyKey + " = " + lhsKeyValue);
-      }
-      return builder.toString();
    }
 
    public String generateUpdateDML(Object[] values_, DKDBTypeInfo[] typeInfos_,

@@ -122,14 +122,13 @@ public class DKApplication {
          else if (line.hasOption(TEST_OPTION_KEY))
             runTestCases(line.getOptionValues(TEST_OPTION_KEY));
          else if (line.hasOption(PLAN_FILE_OPTION_KEY)) {
+            Map<UserKey, Object> userDictionary = new HashMap<UserKey, Object>();
+            String planFilesString = line.getOptionValue(PLAN_FILE_OPTION_KEY);
+            userDictionary.put(UserKey.PLAN_FILES, planFilesString);
             if (line.hasOption(USER_EXTRA_PARAM_KEY)) {
-               runPlan(line.getOptionValue(PLAN_FILE_OPTION_KEY),
-                       line.getOptionValue(USER_EXTRA_PARAM_KEY),
-                       line.hasOption(ERROR_ON_DIFF_OPTION_KEY));
-            } else {
-               runPlan(line.getOptionValue(PLAN_FILE_OPTION_KEY),
-                       line.hasOption(ERROR_ON_DIFF_OPTION_KEY));
+               userDictionary.put(UserKey.EXTRA_PARAM_KEY, line.getOptionValue(USER_EXTRA_PARAM_KEY));
             }
+            runPlan(planFilesString, userDictionary, line.hasOption(ERROR_ON_DIFF_OPTION_KEY));
          }
          else if (line.hasOption(DEMO_DB_OPTION_KEY))
             runDemoDB();
@@ -171,15 +170,7 @@ public class DKApplication {
       formatter.printHelp("java -jar diffkit-app.jar", OPTIONS);
    }
 
-   private static void runPlan(String planFilesString_, boolean errorOnDiff_)
-      throws Exception {
-      runPlan(planFilesString_, null, errorOnDiff_);
-   }
-
-   /**
-    * modify by zhen 20160629
-    * **/
-   private static void runPlan(String planFilesString_, String extraParamKey_, boolean errorOnDiff_)
+   private static void runPlan(String planFilesString_, Map<UserKey, Object> userDictionary_, boolean errorOnDiff_)
            throws Exception {
       Logger systemLog = getSystemLog();
       Logger userLog = DKRuntime.getInstance().getUserLog();
@@ -197,11 +188,8 @@ public class DKApplication {
       userLog.info("rhsSource->{}", rhsSource);
       userLog.info("sink->{}", sink);
       userLog.info("tableComparison->{}", tableComparison);
-      Map<UserKey, Object> userDictionary = new HashMap<UserKey, Object>();
-      userDictionary.put(UserKey.PLAN_FILES, planFilesString_);
-      userDictionary.put(UserKey.EXTRA_PARAM_KEY, extraParamKey_);
       DKContext diffContext = doDiff(lhsSource, rhsSource, sink, tableComparison,
-              userDictionary);
+              userDictionary_);
       userLog.info(sink.generateSummary(diffContext));
       if (plan.getSink().getDiffCount() == 0)
          System.exit(0);
