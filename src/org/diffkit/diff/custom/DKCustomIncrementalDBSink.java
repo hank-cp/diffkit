@@ -63,7 +63,6 @@ public class DKCustomIncrementalDBSink extends DKAbstractCustomDBSink {
     @Override
     public void onRowConsistent(DKSource lhs, Object[] lhsData, DKSource rhs, Object[] rhsData) {
         try {
-            Map<String, ?> row = this.createRow(null, lhsData, rhsData, _context);
             deleteRow(lhsData, rhsData);
         } catch (SQLException e) {
             _log.error("Delete diff table record failed.", e);

@@ -120,7 +120,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<bean id="lhs.source" class="org.diffkit.diff.sns.DKDBSource">
 		<constructor-arg index="0" value="proc_stock_in_task" />
-		<constructor-arg index="1" value="WHERE CRAFT = 0 AND CREATED_DATE > '2016-01-06 16'" />
+		<constructor-arg index="1" value="WHERE CRAFT = 0 AND CREATED_DATE > '2016-07-01 00'" />
 		<constructor-arg index="2" ref="atsConnectionSource" />
 		<constructor-arg index="3" ref="lhs.table.model" />
 		<constructor-arg index="4">
@@ -192,7 +192,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<bean id="rhs.source" class="org.diffkit.diff.sns.DKDBSource">
 		<constructor-arg index="0" value="moctg" />
-		<constructor-arg index="1" value="WHERE TG022='Y' AND (TG001='5801' OR TG001='5802') AND (CREATE_DATE > '20160106160000000' OR MODI_DATE > '20160106160000000')" />
+		<constructor-arg index="1" value="WHERE TG022='Y' AND (TG001='5801' OR TG001='5802') AND (CREATE_DATE > '20160701000000000' OR MODI_DATE > '20160701000000000')" />
 		<constructor-arg index="2" ref="yfConnectionSource" />
 		<constructor-arg index="3" ref="rhs.table.model" />
 		<constructor-arg index="4">

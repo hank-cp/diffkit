@@ -186,7 +186,7 @@ public class DKAbstractCustomDBSink extends DKAbstractSink {
                         return null;
                     }
                     //at this position ,record first time col diff
-                    row.put("DIFF_COLUMN_POSITION",diff_.getColumnStep());
+                    row.put("DIFF_COLUMN_POSITION", diff_.getColumnStep());
                     row.put("DIFF", "3");
                     break;
             }
@@ -242,7 +242,7 @@ public class DKAbstractCustomDBSink extends DKAbstractSink {
         }
 
         columns.add(new DKDBColumn("DIFF", columns.size(), "VARCHAR", 128, true));
-        columns.add(new DKDBColumn("DIFF_COLUMN_POSITION", columns.size(), "INT", 15, true));
+        columns.add(new DKDBColumn("DIFF_COLUMN_POSITION", columns.size(), "VARCHAR", 3, true));
         //record createDate
         columns.add(new DKDBColumn("RECORD_DATE", columns.size(), "DATETIME", 128, true));
 
