@@ -15,12 +15,14 @@
  */
 package org.diffkit.diff.custom;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.StringUtils;
 import org.diffkit.common.DKValidate;
 import org.diffkit.db.DKDBColumn;
 import org.diffkit.db.DKDBTable;
 import org.diffkit.db.DKDatabase;
+import org.diffkit.db.DKSqlGenerator;
 import org.diffkit.diff.engine.*;
 import org.diffkit.diff.sns.DKAbstractSink;
 import org.diffkit.diff.sns.DKDBSource;
@@ -29,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -53,8 +56,12 @@ public class DKAbstractCustomDBSink extends DKAbstractSink {
     private final String _rowDiffWriteBackStatement;
     private final String _columnDiffWriteBackStatement;
 
+    private final DKSqlGenerator _sqlGenerator;
+
     protected int _failedUpdateCount;
     private Long _previousRowStep;
+
+    protected String colDiffPosition = "";//record the diff column position
 
     private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
@@ -84,7 +91,7 @@ public class DKAbstractCustomDBSink extends DKAbstractSink {
         _columnDiffWriteBackStatement = columnDiffWriteBackStatement_;
 
         _diffTable = this.generateDiffTable();
-
+        _sqlGenerator = new DKSqlGenerator(database_);
         DKValidate.notNull(_database, _diffTable);
     }
 
@@ -126,6 +133,7 @@ public class DKAbstractCustomDBSink extends DKAbstractSink {
     public void onRowConsistent(DKSource lhs, Object[] lhsData, DKSource rhs, Object[] rhsData) {
         try {
             Map<String, ?> row = this.createRow(null, lhsData, rhsData, _context);
+            deleteRow(lhsData,rhsData);//ensure just have one record
             _database.insertRow(row, _diffTable);
 
             if (_writeBackDataSource != null && StringUtils.isNotEmpty(_rowConsistenceWriteBackStatement)) {
@@ -142,6 +150,7 @@ public class DKAbstractCustomDBSink extends DKAbstractSink {
         try {
             Map<String, ?> row = this.createRow(diff_, lhsData, rhsData, context_);
             if (row != null) {
+                deleteRow(lhsData,rhsData);//ensure just have one record
                 _database.insertRow(row, _diffTable);
             }
 
@@ -181,12 +190,15 @@ public class DKAbstractCustomDBSink extends DKAbstractSink {
                     } else if (_previousRowStep != context_._rowStep) {
                         // walk to next row, reset recorded row step
                         _previousRowStep = context_._rowStep;
+                        colDiffPosition = "";//change row,set to empty
                     } else {
                         // still in same row, skip to record
-                        return null;
+                        //FIXME continue to compare, to find all diff column
+                        //return null;
                     }
+                    colDiffPosition += diff_.getColumnStep() + ",";
                     //at this position ,record first time col diff
-                    row.put("DIFF_COLUMN_POSITION", diff_.getColumnStep());
+                    row.put("DIFF_COLUMN_POSITION", colDiffPosition);
                     row.put("DIFF", "3");
                     break;
             }
@@ -242,7 +254,7 @@ public class DKAbstractCustomDBSink extends DKAbstractSink {
         }
 
         columns.add(new DKDBColumn("DIFF", columns.size(), "VARCHAR", 128, true));
-        columns.add(new DKDBColumn("DIFF_COLUMN_POSITION", columns.size(), "VARCHAR", 3, true));
+        columns.add(new DKDBColumn("DIFF_COLUMN_POSITION", columns.size(), "VARCHAR", 16, true));
         //record createDate
         columns.add(new DKDBColumn("RECORD_DATE", columns.size(), "DATETIME", 128, true));
 
@@ -251,4 +263,53 @@ public class DKAbstractCustomDBSink extends DKAbstractSink {
                 _diffResultTableDDLExtra);
     }
 
+    /**
+     * add by zhen 20160629
+     * before insert diff result,delete the record by lhs/rhs specify key
+     * to ensure the diff result table just have one proof record
+     * **/
+    private boolean deleteRow(Object[] lhsData, Object[] rhsData) throws SQLException {
+        String deleteSql = generateDeleteSQL(lhsData, rhsData);
+        Connection connection = _database.getConnection();
+        boolean delete = DKSqlUtil.executeUpdate(deleteSql, connection);
+        // DKSqlUtil.close(connection);
+        return delete;
+    }
+
+    /**
+     * add by zhen 20160629
+     * delete the record by lhs/rhs specify key
+     * **/
+    private String generateDeleteSQL(Object[] lhsData, Object[] rhsData)
+            throws SQLException {
+        if (ArrayUtils.isEmpty(lhsData) && ArrayUtils.isEmpty(rhsData)) return null;
+        StringBuilder builder = new StringBuilder();
+        builder.append(String.format("DELETE FROM %s\n",
+                _sqlGenerator.generateQualifiedTableIdentifierString(_diffTable.getSchema(), _diffTable.getTableName())));
+
+        String lhsSpecifyKey = "lhs_" + _context.getLhs().getModel().getKeyColumn().getName();
+        String rhsSpecifyKey = "rhs_" + _context.getRhs().getModel().getKeyColumn().getName();
+
+        String lhsKeyValue = null;
+        String rhsKeyValue = null;
+
+        for (int sideIdx=0; sideIdx<2; sideIdx++) {
+            for (int columnIdx=0; columnIdx<_displayColumnNames[sideIdx].length; columnIdx++) {
+                String columnName = _displayColumnNames[sideIdx][columnIdx];
+                if (!Objects.equals(columnName, sideIdx == 0
+                        ? _context.getLhs().getModel().getKeyColumn().getName()
+                        : _context.getRhs().getModel().getKeyColumn().getName())) continue;
+                Object[] data = sideIdx == 0 ? lhsData : rhsData;
+                if (sideIdx == 0) {
+                    lhsKeyValue = data != null ? data[columnIdx].toString() : null;
+                } else {
+                    rhsKeyValue = data != null ? data[columnIdx].toString() : null;
+                }
+            }
+        }
+
+        builder.append(" WHERE ").append(lhsSpecifyKey).append(" = '").append(Optional.ofNullable(lhsKeyValue).orElse("")).append("'")
+                .append(" OR ").append(rhsSpecifyKey).append(" = '").append(Optional.ofNullable(rhsKeyValue).orElse("")).append("'");
+        return builder.toString();
+    }
 }
