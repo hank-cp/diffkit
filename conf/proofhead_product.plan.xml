@@ -72,8 +72,8 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 				</list>
 			</list>
 		</constructor-arg>
-		<!--<constructor-arg index="6" value="9223372036854775807" />-->
-		<constructor-arg index="6" value="10"/>
+		<constructor-arg index="6" value="9223372036854775807" />
+		<!--<constructor-arg index="6" value="10"/>-->
 	</bean>
 
 	<bean id="column.comparison.code" class="org.diffkit.diff.engine.DKColumnComparison">
