@@ -80,7 +80,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="1" ref="sinkConnectionSource" />
 		<constructor-arg index="2" ref="table.comparison" />
 		<constructor-arg index="3" value="diff_product_bom" />
-		<constructor-arg index="4" value="ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" />
+		<constructor-arg index="4" value="ENGINE=MyISAM" />
 		<constructor-arg index="5" ref="lhs.source" />
 		<constructor-arg index="6" value="0"/>
 		<constructor-arg index="7" ref="lhs.source" />

@@ -102,14 +102,6 @@ public class DKCustomDBSink extends DKAbstractCustomDBSink {
     public void close(DKContext context_) throws IOException {
         _summaryWriter.write(getSummary(_context));
         _summaryWriter.close();
-
-        try {
-            DKSqlUtil.close(_database.getConnection());
-        } catch (SQLException e_) {
-            _log.error(null, e_);
-            throw new RuntimeException(e_);
-        }
-
         super.close(context_);
     }
 

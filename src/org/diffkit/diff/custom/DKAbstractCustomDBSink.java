@@ -56,6 +56,8 @@ public class DKAbstractCustomDBSink extends DKAbstractSink {
     protected int _failedUpdateCount;
     private Long _previousRowStep;
 
+    private Map<String, Object> _pendingDiffTableRow;
+
     private final Logger _log = LoggerFactory.getLogger(this.getClass());
 
     public DKAbstractCustomDBSink(DKDatabase database_,
@@ -113,6 +115,7 @@ public class DKAbstractCustomDBSink extends DKAbstractSink {
     @Override
     public void close(DKContext context_) throws IOException {
         try {
+            flushPendingRow(); // insertPending if there is still any
             DKSqlUtil.close(_database.getConnection());
         } catch (SQLException e_) {
             _log.error(null, e_);
@@ -167,31 +170,45 @@ public class DKAbstractCustomDBSink extends DKAbstractSink {
         }
     }
 
-    protected Map<String, ?> createRow(DKDiff diff_, Object[] lhsData, Object[] rhsData, DKContext context_) {
-        Map<String, Object> row = new HashMap<>();
+    protected Map<String, Object> createRow(DKDiff diff_, Object[] lhsData, Object[] rhsData, DKContext context_) {
+        Map<String, Object> row = null;
         if (diff_ != null) {
             switch (diff_.getKind()) {
                 case ROW_DIFF:
+                    row = createRow(lhsData, rhsData);
                     row.put("DIFF", ((DKRowDiff)diff_).getSide() == DKSide.LEFT ? "2" : "1");
+                    flushPendingRow(); // row changed, flush pending row
                     break;
+
                 case COLUMN_DIFF:
-                    if (_previousRowStep == null) {
-                        // first column
+                    if (_previousRowStep == null                        // first row
+                            || _previousRowStep != context_._rowStep) { // walk to next row
+                        // reset recorded row step
                         _previousRowStep = context_._rowStep;
-                    } else if (_previousRowStep != context_._rowStep) {
-                        // walk to next row, reset recorded row step
-                        _previousRowStep = context_._rowStep;
+                        // row changed, flush pending row
+                        flushPendingRow();
+                        // then assign a new pending row
+                        _pendingDiffTableRow = createRow(lhsData, rhsData);
+                        _pendingDiffTableRow.put("DIFF", "3");
+                        _pendingDiffTableRow.put("DIFF_COLUMN_POSITION", diff_.getColumnStep());
                     } else {
-                        // still in same row, skip to record
-                        return null;
+                        _pendingDiffTableRow.put("DIFF_COLUMN_POSITION",
+                                _pendingDiffTableRow.get("DIFF_COLUMN_POSITION").toString()+","+diff_.getColumnStep());
                     }
-                    //at this position ,record first time col diff
-                    row.put("DIFF_COLUMN_POSITION", diff_.getColumnStep());
-                    row.put("DIFF", "3");
-                    break;
+                    // keep row null, and postpone saving row till flush is invoked.
             }
-        } else row.put("DIFF", "0");
-        //createDate
+        } else {
+            row = createRow(lhsData, rhsData);
+            row.put("DIFF", "0");
+            flushPendingRow(); // row changed, flush pending row
+        }
+
+        return row;
+    }
+
+    private Map<String, Object> createRow(Object[] lhsData, Object[] rhsData) {
+        Map<String, Object> row = new HashMap<>();
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String timestamp = sdf.format(new Date());
         row.put("RECORD_DATE", timestamp);
@@ -203,7 +220,6 @@ public class DKAbstractCustomDBSink extends DKAbstractSink {
                 row.put((sideIdx == 0 ? "lhs_" : "rhs_")+columnName, data != null ? data[columnIdx] : null);
             }
         }
-
         return row;
     }
 
@@ -241,14 +257,27 @@ public class DKAbstractCustomDBSink extends DKAbstractSink {
             }
         }
 
-        columns.add(new DKDBColumn("DIFF", columns.size(), "VARCHAR", 128, true));
-        columns.add(new DKDBColumn("DIFF_COLUMN_POSITION", columns.size(), "VARCHAR", 3, true));
+        columns.add(new DKDBColumn("DIFF", columns.size(), "VARCHAR", 1, true));
+        columns.add(new DKDBColumn("DIFF_COLUMN_POSITION", columns.size(), "VARCHAR", 255, true));
         //record createDate
         columns.add(new DKDBColumn("RECORD_DATE", columns.size(), "DATETIME", 128, true));
 
         DKDBColumn[] columnArray = columns.toArray(new DKDBColumn[columns.size()]);
         return new DKDBTable(null, null, _diffTableName, columnArray, null,
                 _diffResultTableDDLExtra);
+    }
+
+    private boolean flushPendingRow() {
+        // flush pending row
+        if (_pendingDiffTableRow == null) return true;
+
+        Map<String, Object> insertRow = _pendingDiffTableRow;
+        _pendingDiffTableRow = null;
+        try {
+            return _database.insertRow(insertRow, _diffTable);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
