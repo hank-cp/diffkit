@@ -120,7 +120,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<bean id="lhs.source" class="org.diffkit.diff.sns.DKDBSource">
 		<constructor-arg index="0" value="proc_stock_in_task" />
-		<constructor-arg index="1" value="WHERE CRAFT = 0 AND CREATED_DATE > '2016-07-01 00'" />
+		<constructor-arg index="1" value="WHERE CRAFT = 0 AND CREATED_DATE > '2016-07-01 00 AND SOURCE = 0'" />
 		<constructor-arg index="2" ref="atsConnectionSource" />
 		<constructor-arg index="3" ref="lhs.table.model" />
 		<constructor-arg index="4">

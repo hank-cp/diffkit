@@ -54,6 +54,7 @@
           <file>file://$MODULE_DIR$/conf/proofhead_product_bom.plan.xml</file>
           <file>file://$MODULE_DIR$/conf/proofhead_product_incremental.plan.xml</file>
           <file>file://$MODULE_DIR$/conf/proofhead_product_bom_incremental.plan.xml</file>
+          <file>file://$MODULE_DIR$/conf/proofhead_end_product.plan.xml</file>
         </fileset>
       </configuration>
     </facet>

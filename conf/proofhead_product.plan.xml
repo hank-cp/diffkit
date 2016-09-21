@@ -22,9 +22,9 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 				<ref bean="column.comparison.name" />
 				<ref bean="column.comparison.spec" />
 				<ref bean="column.comparison.unit" />
-				<ref bean="column.comparison.materialControl" />
-				<ref bean="column.comparison.feature" />
 				<ref bean="column.comparison.wareHouse" />
+				<ref bean="column.comparison.feature" />
+				<ref bean="column.comparison.materialControl" />
 				<ref bean="column.comparison.workStation" />
 				<ref bean="column.comparison.status" />
 			</list>
@@ -167,7 +167,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<!-- ATS database config -->
 	<bean id="lhs.source" class="org.diffkit.diff.sns.DKDBSource">
 		<constructor-arg index="0" value="ng_proofhead_product_view" />
-		<constructor-arg index="1" value="" />
+		<constructor-arg index="1" value="WHERE STATUS = 0" />
 		<constructor-arg index="2" ref="atsConnectionSource" />
 		<constructor-arg index="3" ref="lhs.table.model" />
 		<constructor-arg index="4">
@@ -271,7 +271,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<!-- YF database config -->
 	<bean id="rhs.source" class="org.diffkit.diff.sns.DKDBSource">
 		<constructor-arg index="0" value="invmb" />
-		<constructor-arg index="1" value="" />
+		<constructor-arg index="1" value="WHERE MB109 = 'Y'" />
 		<constructor-arg index="2" ref="yfConnectionSource" />
 		<constructor-arg index="3" ref="rhs.table.model" />
 		<constructor-arg index="4">
