@@ -100,7 +100,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<!-- ATS database config -->
 	<bean id="lhs.source" class="org.diffkit.diff.sns.DKDBSource">
 		<constructor-arg index="0" value="ng_product" />
-		<constructor-arg index="1" value="WHERE BOM_DUMP IS NOT NULL AND DIAG_STATUS = '1' AND STATUS = 0" />
+		<constructor-arg index="1" value="WHERE DESIGN = b'0' AND BOM_DUMP IS NOT NULL AND DIAG_STATUS = '1' AND STATUS = 0" />
 		<constructor-arg index="2" ref="atsConnectionSource" />
 		<constructor-arg index="3" ref="lhs.table.model" />
 		<constructor-arg index="4">
