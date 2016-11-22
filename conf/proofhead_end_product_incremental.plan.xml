@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
 http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<bean id="plan" class="org.diffkit.diff.conf.DKPassthroughPlan">
@@ -239,32 +239,33 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="2" ref="equalsDiffor" />
 	</bean>
 	<bean id="equalsDiffor" class="org.diffkit.diff.diffor.DKEqualsDiffor"
-		factory-method="getInstance" />
+		  factory-method="getInstance" />
 
 	<bean id="numberDiffor" class="org.diffkit.diff.diffor.DKNumberDiffor"
 		  factory-method="getInstance" />
 
-	<bean id="sink.db" class="org.diffkit.diff.custom.DKCustomDBSink">
-    	<constructor-arg index="0" value="./proofhead.end_product.diff" />
-		<constructor-arg index="1" ref="sinkConnectionSource" />
-		<constructor-arg index="2" ref="table.end_product_comparison" />
-		<constructor-arg index="3" value="diff_end_product" />
-		<constructor-arg index="4" value="ENGINE=MyISAM" />
-		<constructor-arg index="5" ref="lhs.end_product_source" />
-		<constructor-arg index="6" value="0" />
-		<constructor-arg index="7" ref="lhs.end_product_source" />
-		<constructor-arg index="8" ref="rhs.end_product_source" />
-		<constructor-arg index="9" value="" />
-		<constructor-arg index="10" value="" />
-		<constructor-arg index="11" value="" />
-		<constructor-arg index="12" ><null/></constructor-arg>
+	<bean id="statusDiffor" class="org.diffkit.diff.custom.DKStatusDiffor"
+		  factory-method="getInstance" />
+
+	<bean id="sink.db" class="org.diffkit.diff.custom.DKCustomIncrementalDBSink">
+		<constructor-arg index="0" ref="sinkConnectionSource" />
+		<constructor-arg index="1" ref="table.end_product_comparison" />
+		<constructor-arg index="2" value="diff_end_product" />
+		<constructor-arg index="3" value="ENGINE=MyISAM" />
+		<constructor-arg index="4" ref="lhs.end_product_source" />
+		<constructor-arg index="5" value="0"/>
+		<constructor-arg index="6" ref="lhs.end_product_source" />
+		<constructor-arg index="7" ref="rhs.end_product_source" />
+		<constructor-arg index="8" value=""/>
+		<constructor-arg index="9" value=""/>
+		<constructor-arg index="10" value=""/>
 	</bean>
 
 	<!-- ATS database config -->
 	<bean id="lhs.end_product_source" class="org.diffkit.diff.sns.DKDBSource">
 		<constructor-arg index="0" value="po_end_product_proofhead_view" />
 		<constructor-arg index="1" value="WHERE ENDPRODUCT_CREATED_DATE > '20160731000000000'" />
-		<constructor-arg index="2" ref="atsConnectionSource" />
+		<constructor-arg index="2" ref="atsConnectionSource"/>
 		<constructor-arg index="3" ref="lhs.table.end_product_model" />
 		<constructor-arg index="4">
 			<list>
