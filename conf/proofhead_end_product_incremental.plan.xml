@@ -20,26 +20,10 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 			<list>
 				<ref bean="column.comparison.parent_category" />
 				<ref bean="column.comparison.detail_league" />
-				<ref bean="column.comparison.endProduct_seq" />
-				<ref bean="column.comparison.endProduct_code" />
-				<ref bean="column.comparison.endProduct_name" />
-				<ref bean="column.comparison.endProduct_spec" />
 				<ref bean="column.comparison.endProduct_count" />
-				<ref bean="column.comparison.endProduct_create_by" />
-				<ref bean="column.comparison.endProduct_update_by" />
-				<ref bean="column.comparison.endProduct_create_date" />
-				<ref bean="column.comparison.endProduct_update_date" />
-				<ref bean="column.comparison.ware_house" />
-				<ref bean="column.comparison.order_code" />
 				<ref bean="column.comparison.customer_code" />
 				<ref bean="column.comparison.customer_order_code" />
-				<ref bean="column.comparison.order_type" />
 				<ref bean="column.comparison.delivery_date" />
-				<ref bean="column.comparison.order_description" />
-				<ref bean="column.comparison.order_create_date" />
-				<ref bean="column.comparison.order_update_date" />
-				<ref bean="column.comparison.order_create_by" />
-				<ref bean="column.comparison.order_update_by" />
 			</list>
 		</constructor-arg>
 		<constructor-arg index="4">
@@ -50,22 +34,6 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 				<value>3</value>
 				<value>4</value>
 				<value>5</value>
-				<value>6</value>
-				<value>7</value>
-				<value>8</value>
-				<value>9</value>
-				<value>10</value>
-				<value>11</value>
-				<value>12</value>
-				<value>13</value>
-				<value>14</value>
-				<value>15</value>
-				<value>16</value>
-				<value>17</value>
-				<value>18</value>
-				<value>19</value>
-				<value>20</value>
-				<value>21</value>
 			</list>
 		</constructor-arg>
 		<constructor-arg index="5">
@@ -128,51 +96,6 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<!--<constructor-arg index="6" value="10"/>-->
 	</bean>
 
-	<bean id="column.comparison.endProduct_create_by" class="org.diffkit.diff.engine.DKColumnComparison">
-		<constructor-arg index="0" ref="lhs.column.endProduct_create_by" />
-		<constructor-arg index="1" ref="rhs.column.endProduct_create_by" />
-		<constructor-arg index="2" ref="equalsDiffor" />
-	</bean>
-	<bean id="column.comparison.endProduct_update_by" class="org.diffkit.diff.engine.DKColumnComparison">
-		<constructor-arg index="0" ref="lhs.column.endProduct_update_by" />
-		<constructor-arg index="1" ref="rhs.column.endProduct_update_by" />
-		<constructor-arg index="2" ref="equalsDiffor" />
-	</bean>
-	<bean id="column.comparison.endProduct_create_date" class="org.diffkit.diff.engine.DKColumnComparison">
-		<constructor-arg index="0" ref="lhs.column.endProduct_create_date" />
-		<constructor-arg index="1" ref="rhs.column.endProduct_create_date" />
-		<constructor-arg index="2" ref="equalsDiffor" />
-	</bean>
-	<bean id="column.comparison.endProduct_update_date" class="org.diffkit.diff.engine.DKColumnComparison">
-		<constructor-arg index="0" ref="lhs.column.endProduct_update_date" />
-		<constructor-arg index="1" ref="rhs.column.endProduct_update_date" />
-		<constructor-arg index="2" ref="equalsDiffor" />
-	</bean>
-	<bean id="column.comparison.order_description" class="org.diffkit.diff.engine.DKColumnComparison">
-		<constructor-arg index="0" ref="lhs.column.order_description" />
-		<constructor-arg index="1" ref="rhs.column.order_description" />
-		<constructor-arg index="2" ref="equalsDiffor" />
-	</bean>
-	<bean id="column.comparison.order_create_date" class="org.diffkit.diff.engine.DKColumnComparison">
-		<constructor-arg index="0" ref="lhs.column.order_create_date" />
-		<constructor-arg index="1" ref="rhs.column.order_create_date" />
-		<constructor-arg index="2" ref="equalsDiffor" />
-	</bean>
-	<bean id="column.comparison.order_update_date" class="org.diffkit.diff.engine.DKColumnComparison">
-		<constructor-arg index="0" ref="lhs.column.order_update_date" />
-		<constructor-arg index="1" ref="rhs.column.order_update_date" />
-		<constructor-arg index="2" ref="equalsDiffor" />
-	</bean>
-	<bean id="column.comparison.order_create_by" class="org.diffkit.diff.engine.DKColumnComparison">
-		<constructor-arg index="0" ref="lhs.column.order_create_by" />
-		<constructor-arg index="1" ref="rhs.column.order_create_by" />
-		<constructor-arg index="2" ref="equalsDiffor" />
-	</bean>
-	<bean id="column.comparison.order_update_by" class="org.diffkit.diff.engine.DKColumnComparison">
-		<constructor-arg index="0" ref="lhs.column.order_update_by" />
-		<constructor-arg index="1" ref="rhs.column.order_update_by" />
-		<constructor-arg index="2" ref="equalsDiffor" />
-	</bean>
 	<bean id="column.comparison.parent_category" class="org.diffkit.diff.engine.DKColumnComparison">
 		<constructor-arg index="0" ref="lhs.column.parent_category" />
 		<constructor-arg index="1" ref="rhs.column.category" />
@@ -193,11 +116,6 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="1" ref="rhs.column.customer_order_code" />
 		<constructor-arg index="2" ref="equalsDiffor" />
 	</bean>
-	<bean id="column.comparison.order_type" class="org.diffkit.diff.engine.DKColumnComparison">
-		<constructor-arg index="0" ref="lhs.column.order_type" />
-		<constructor-arg index="1" ref="rhs.column.order_type" />
-		<constructor-arg index="2" ref="equalsDiffor" />
-	</bean>
 	<bean id="column.comparison.order_code" class="org.diffkit.diff.engine.DKColumnComparison">
 		<constructor-arg index="0" ref="lhs.column.order_code" />
 		<constructor-arg index="1" ref="rhs.column.order_code" />
@@ -213,24 +131,9 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="1" ref="rhs.column.endProduct_code" />
 		<constructor-arg index="2" ref="equalsDiffor" />
 	</bean>
-	<bean id="column.comparison.endProduct_name" class="org.diffkit.diff.engine.DKColumnComparison">
-		<constructor-arg index="0" ref="lhs.column.endProduct_name" />
-		<constructor-arg index="1" ref="rhs.column.endProduct_name" />
-		<constructor-arg index="2" ref="equalsDiffor" />
-	</bean>
-	<bean id="column.comparison.endProduct_spec" class="org.diffkit.diff.engine.DKColumnComparison">
-		<constructor-arg index="0" ref="lhs.column.endProduct_spec" />
-		<constructor-arg index="1" ref="rhs.column.endProduct_spec" />
-		<constructor-arg index="2" ref="equalsDiffor" />
-	</bean>
 	<bean id="column.comparison.endProduct_count" class="org.diffkit.diff.engine.DKColumnComparison">
 		<constructor-arg index="0" ref="lhs.column.endProduct_count" />
 		<constructor-arg index="1" ref="rhs.column.endProduct_count" />
-		<constructor-arg index="2" ref="equalsDiffor" />
-	</bean>
-	<bean id="column.comparison.ware_house" class="org.diffkit.diff.engine.DKColumnComparison">
-		<constructor-arg index="0" ref="lhs.column.ware_house" />
-		<constructor-arg index="1" ref="rhs.column.ware_house" />
 		<constructor-arg index="2" ref="equalsDiffor" />
 	</bean>
 	<bean id="column.comparison.delivery_date" class="org.diffkit.diff.engine.DKColumnComparison">
@@ -264,7 +167,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<!-- ATS database config -->
 	<bean id="lhs.end_product_source" class="org.diffkit.diff.sns.DKDBSource">
 		<constructor-arg index="0" value="po_end_product_proofhead_view" />
-		<constructor-arg index="1" value="WHERE ENDPRODUCT_CREATED_DATE > '20160731000000000'" />
+		<constructor-arg index="1" value="WHERE ENDPRODUCT_CREATED_DATE > '2016-07-31 00:00:00'" />
 		<constructor-arg index="2" ref="atsConnectionSource"/>
 		<constructor-arg index="3" ref="lhs.table.end_product_model" />
 		<constructor-arg index="4">
@@ -281,11 +184,14 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 			<list>
 				<ref bean="lhs.column.parent_category" />
 				<ref bean="lhs.column.detail_league" />
-				<ref bean="lhs.column.endProduct_seq" />
+				<ref bean="lhs.column.endProduct_count" />
+				<ref bean="lhs.column.customer_code" />
+				<ref bean="lhs.column.customer_order_code" />
+				<ref bean="lhs.column.delivery_date" />
 				<ref bean="lhs.column.endProduct_code" />
+				<ref bean="lhs.column.endProduct_seq" />
 				<ref bean="lhs.column.endProduct_name" />
 				<ref bean="lhs.column.endProduct_spec" />
-				<ref bean="lhs.column.endProduct_count" />
 				<ref bean="lhs.column.endProduct_create_by" />
 				<ref bean="lhs.column.endProduct_update_by" />
 				<ref bean="lhs.column.endProduct_create_date" />
@@ -293,10 +199,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 				<ref bean="lhs.column.ware_house" />
 				<ref bean="lhs.column.endProduct_status" />
 				<ref bean="lhs.column.order_code" />
-				<ref bean="lhs.column.customer_code" />
-				<ref bean="lhs.column.customer_order_code" />
 				<ref bean="lhs.column.order_type" />
-				<ref bean="lhs.column.delivery_date" />
 				<ref bean="lhs.column.order_description" />
 				<ref bean="lhs.column.order_create_date" />
 				<ref bean="lhs.column.order_update_date" />
@@ -327,30 +230,30 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="1" value="DETAIL_LEAGUE" />
 		<constructor-arg index="2" value="STRING" />
 	</bean>
-	<bean id="lhs.column.endProduct_seq" class="org.diffkit.diff.engine.DKColumnModel">
-		<constructor-arg index="0" value="2" />
-		<constructor-arg index="1" value="ENDPRODUCT_SEQ" />
-		<constructor-arg index="2" value="STRING" />
-	</bean>
-	<bean id="lhs.column.endProduct_code" class="org.diffkit.diff.engine.DKColumnModel">
-		<constructor-arg index="0" value="3" />
-		<constructor-arg index="1" value="ENDPRODUCT_CODE" />
-		<constructor-arg index="2" value="STRING" />
-	</bean>
-	<bean id="lhs.column.endProduct_name" class="org.diffkit.diff.engine.DKColumnModel">
-		<constructor-arg index="0" value="4" />
-		<constructor-arg index="1" value="ENDPRODUCT_NAME" />
-		<constructor-arg index="2" value="STRING" />
-	</bean>
-	<bean id="lhs.column.endProduct_spec" class="org.diffkit.diff.engine.DKColumnModel">
-		<constructor-arg index="0" value="5" />
-		<constructor-arg index="1" value="ENDPRODUCT_SPEC" />
-		<constructor-arg index="2" value="STRING" />
-	</bean>
 	<bean id="lhs.column.endProduct_count" class="org.diffkit.diff.engine.DKColumnModel">
-		<constructor-arg index="0" value="6" />
+		<constructor-arg index="0" value="2" />
 		<constructor-arg index="1" value="ENDPRODUCT_COUNT" />
 		<constructor-arg index="2" value="INTEGER" />
+	</bean>
+	<bean id="lhs.column.customer_code" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="3" />
+		<constructor-arg index="1" value="CUSTOMER_CODE" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+	<bean id="lhs.column.customer_order_code" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="4" />
+		<constructor-arg index="1" value="CUSTOMER_ORDER_CODE" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+	<bean id="lhs.column.delivery_date" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="5" />
+		<constructor-arg index="1" value="DELIVERY_DATE" />
+		<constructor-arg index="2" value="TIME" />
+	</bean>
+	<bean id="lhs.column.endProduct_seq" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="6" />
+		<constructor-arg index="1" value="ENDPRODUCT_SEQ" />
+		<constructor-arg index="2" value="STRING" />
 	</bean>
 	<bean id="lhs.column.endProduct_create_by" class="org.diffkit.diff.engine.DKColumnModel">
 		<constructor-arg index="0" value="7" />
@@ -387,14 +290,14 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="1" value="ORDER_CODE" />
 		<constructor-arg index="2" value="STRING" />
 	</bean>
-	<bean id="lhs.column.customer_code" class="org.diffkit.diff.engine.DKColumnModel">
+	<bean id="lhs.column.endProduct_code" class="org.diffkit.diff.engine.DKColumnModel">
 		<constructor-arg index="0" value="14" />
-		<constructor-arg index="1" value="CUSTOMER_CODE" />
+		<constructor-arg index="1" value="ENDPRODUCT_CODE" />
 		<constructor-arg index="2" value="STRING" />
 	</bean>
-	<bean id="lhs.column.customer_order_code" class="org.diffkit.diff.engine.DKColumnModel">
+	<bean id="lhs.column.endProduct_name" class="org.diffkit.diff.engine.DKColumnModel">
 		<constructor-arg index="0" value="15" />
-		<constructor-arg index="1" value="CUSTOMER_ORDER_CODE" />
+		<constructor-arg index="1" value="ENDPRODUCT_NAME" />
 		<constructor-arg index="2" value="STRING" />
 	</bean>
 	<bean id="lhs.column.order_type" class="org.diffkit.diff.engine.DKColumnModel">
@@ -402,10 +305,10 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="1" value="ORDER_TYPE" />
 		<constructor-arg index="2" value="STRING" />
 	</bean>
-	<bean id="lhs.column.delivery_date" class="org.diffkit.diff.engine.DKColumnModel">
+	<bean id="lhs.column.endProduct_spec" class="org.diffkit.diff.engine.DKColumnModel">
 		<constructor-arg index="0" value="17" />
-		<constructor-arg index="1" value="DELIVERY_DATE" />
-		<constructor-arg index="2" value="TIME" />
+		<constructor-arg index="1" value="ENDPRODUCT_SPEC" />
+		<constructor-arg index="2" value="STRING" />
 	</bean>
 	<bean id="lhs.column.order_description" class="org.diffkit.diff.engine.DKColumnModel">
 		<constructor-arg index="0" value="18" />
@@ -441,7 +344,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<!-- imported database config -->
 	<bean id="rhs.end_product_source" class="org.diffkit.diff.sns.DKDBSource">
 		<constructor-arg index="0" value="po_end_product_imported_view" />
-		<constructor-arg index="1" value="WHERE ENDPRODUCT_CREATED_DATE > '20160731000000000'" />
+		<constructor-arg index="1" value="WHERE ENDPRODUCT_CREATED_DATE > '2016-07-31 00:00:00'" />
 		<constructor-arg index="2" ref="atsConnectionSource" />
 		<constructor-arg index="3" ref="rhs.table.end_product_model" />
 		<constructor-arg index="4">
@@ -458,11 +361,14 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 			<list>
 				<ref bean="rhs.column.category" />
 				<ref bean="rhs.column.detail_league" />
+				<ref bean="rhs.column.endProduct_count" />
+				<ref bean="rhs.column.customer_code" />
+				<ref bean="rhs.column.customer_order_code" />
+				<ref bean="rhs.column.delivery_date" />
 				<ref bean="rhs.column.endProduct_seq" />
 				<ref bean="rhs.column.endProduct_code" />
 				<ref bean="rhs.column.endProduct_name" />
 				<ref bean="rhs.column.endProduct_spec" />
-				<ref bean="rhs.column.endProduct_count" />
 				<ref bean="rhs.column.endProduct_create_by" />
 				<ref bean="rhs.column.endProduct_update_by" />
 				<ref bean="rhs.column.endProduct_create_date" />
@@ -470,10 +376,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 				<ref bean="rhs.column.ware_house" />
 				<ref bean="rhs.column.endProduct_status" />
 				<ref bean="rhs.column.order_code" />
-				<ref bean="rhs.column.customer_code" />
-				<ref bean="rhs.column.customer_order_code" />
 				<ref bean="rhs.column.order_type" />
-				<ref bean="rhs.column.delivery_date" />
 				<ref bean="rhs.column.order_description" />
 				<ref bean="rhs.column.order_create_date" />
 				<ref bean="rhs.column.order_update_date" />
@@ -504,30 +407,31 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="1" value="DETAIL_LEAGUE" />
 		<constructor-arg index="2" value="STRING" />
 	</bean>
-	<bean id="rhs.column.endProduct_seq" class="org.diffkit.diff.engine.DKColumnModel">
-		<constructor-arg index="0" value="2" />
-		<constructor-arg index="1" value="SEQ" />
-		<constructor-arg index="2" value="STRING" />
-	</bean>
-	<bean id="rhs.column.endProduct_code" class="org.diffkit.diff.engine.DKColumnModel">
-		<constructor-arg index="0" value="3" />
-		<constructor-arg index="1" value="CODE" />
-		<constructor-arg index="2" value="STRING" />
-	</bean>
-	<bean id="rhs.column.endProduct_name" class="org.diffkit.diff.engine.DKColumnModel">
-		<constructor-arg index="0" value="4" />
-		<constructor-arg index="1" value="NAME" />
-		<constructor-arg index="2" value="STRING" />
-	</bean>
-	<bean id="rhs.column.endProduct_spec" class="org.diffkit.diff.engine.DKColumnModel">
-		<constructor-arg index="0" value="5" />
-		<constructor-arg index="1" value="SPEC" />
-		<constructor-arg index="2" value="STRING" />
-	</bean>
 	<bean id="rhs.column.endProduct_count" class="org.diffkit.diff.engine.DKColumnModel">
-		<constructor-arg index="0" value="6" />
+		<constructor-arg index="0" value="2" />
 		<constructor-arg index="1" value="COUNT" />
 		<constructor-arg index="2" value="INTEGER" />
+	</bean>
+	<bean id="rhs.column.customer_code" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="3" />
+		<constructor-arg index="1" value="CUSTOMER_CODE" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+	<bean id="rhs.column.customer_order_code" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="4" />
+		<constructor-arg index="1" value="CUSTOMER_ORDER_CODE" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+	<bean id="rhs.column.delivery_date" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="5" />
+		<constructor-arg index="1" value="DELIVERY_DATE" />
+		<constructor-arg index="2" value="TIME" />
+	</bean>
+
+	<bean id="rhs.column.endProduct_seq" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="6" />
+		<constructor-arg index="1" value="SEQ" />
+		<constructor-arg index="2" value="STRING" />
 	</bean>
 	<bean id="rhs.column.endProduct_create_by" class="org.diffkit.diff.engine.DKColumnModel">
 		<constructor-arg index="0" value="7" />
@@ -564,14 +468,14 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="1" value="ORDER_CODE" />
 		<constructor-arg index="2" value="STRING" />
 	</bean>
-	<bean id="rhs.column.customer_code" class="org.diffkit.diff.engine.DKColumnModel">
+	<bean id="rhs.column.endProduct_code" class="org.diffkit.diff.engine.DKColumnModel">
 		<constructor-arg index="0" value="14" />
-		<constructor-arg index="1" value="CUSTOMER_CODE" />
+		<constructor-arg index="1" value="CODE" />
 		<constructor-arg index="2" value="STRING" />
 	</bean>
-	<bean id="rhs.column.customer_order_code" class="org.diffkit.diff.engine.DKColumnModel">
+	<bean id="rhs.column.endProduct_name" class="org.diffkit.diff.engine.DKColumnModel">
 		<constructor-arg index="0" value="15" />
-		<constructor-arg index="1" value="CUSTOMER_ORDER_CODE" />
+		<constructor-arg index="1" value="NAME" />
 		<constructor-arg index="2" value="STRING" />
 	</bean>
 	<bean id="rhs.column.order_type" class="org.diffkit.diff.engine.DKColumnModel">
@@ -579,10 +483,10 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="1" value="ORDER_TYPE" />
 		<constructor-arg index="2" value="STRING" />
 	</bean>
-	<bean id="rhs.column.delivery_date" class="org.diffkit.diff.engine.DKColumnModel">
+	<bean id="rhs.column.endProduct_spec" class="org.diffkit.diff.engine.DKColumnModel">
 		<constructor-arg index="0" value="17" />
-		<constructor-arg index="1" value="DELIVERY_DATE" />
-		<constructor-arg index="2" value="TIME" />
+		<constructor-arg index="1" value="SPEC" />
+		<constructor-arg index="2" value="STRING" />
 	</bean>
 	<bean id="rhs.column.order_description" class="org.diffkit.diff.engine.DKColumnModel">
 		<constructor-arg index="0" value="18" />
