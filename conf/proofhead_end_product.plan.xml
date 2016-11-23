@@ -166,7 +166,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<!-- ATS database config -->
 	<bean id="lhs.end_product_source" class="org.diffkit.diff.sns.DKDBSource">
 		<constructor-arg index="0" value="po_end_product_proofhead_view" />
-		<constructor-arg index="1" value="WHERE ENDPRODUCT_CREATED_DATE > '20160731000000000'" />
+		<constructor-arg index="1" value="WHERE ENDPRODUCT_CREATED_DATE > '2016-07-31 00:00:00'" />
 		<constructor-arg index="2" ref="atsConnectionSource" />
 		<constructor-arg index="3" ref="lhs.table.end_product_model" />
 		<constructor-arg index="4">
@@ -343,7 +343,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<!-- imported database config -->
 	<bean id="rhs.end_product_source" class="org.diffkit.diff.sns.DKDBSource">
 		<constructor-arg index="0" value="po_end_product_imported_view" />
-		<constructor-arg index="1" value="WHERE ENDPRODUCT_CREATED_DATE > '20160731000000000'" />
+		<constructor-arg index="1" value="WHERE ENDPRODUCT_CREATED_DATE > '2016-07-31 00:00:00'" />
 		<constructor-arg index="2" ref="atsConnectionSource" />
 		<constructor-arg index="3" ref="rhs.table.end_product_model" />
 		<constructor-arg index="4">
