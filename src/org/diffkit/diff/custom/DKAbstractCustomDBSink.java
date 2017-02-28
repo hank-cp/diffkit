@@ -132,7 +132,10 @@ public class DKAbstractCustomDBSink extends DKAbstractSink {
             _database.insertRow(row, _diffTable);
 
             if (_writeBackDataSource != null && StringUtils.isNotEmpty(_rowConsistenceWriteBackStatement)) {
-                _writeBackDataSource.getDatabase().executeUpdate(String.format(_rowConsistenceWriteBackStatement, lhsData[_writeBackKeyIndex]));
+                _writeBackDataSource.getDatabase().executeUpdate(
+                        _rowConsistenceWriteBackStatement
+                                .replace("{recordKey}", lhsData[_writeBackKeyIndex].toString())
+                                .replace("{diff}", "0"));
             }
         } catch (SQLException e) {
             _failedUpdateCount += 1;
@@ -152,13 +155,17 @@ public class DKAbstractCustomDBSink extends DKAbstractSink {
                 if (diff_.getKind() == DKDiff.Kind.ROW_DIFF
                         && _writeBackDataSource != null
                         && StringUtils.isNotEmpty(_rowDiffWriteBackStatement)) {
-                    _writeBackDataSource.getDatabase().executeUpdate(String.format(_rowDiffWriteBackStatement,
-                            ((DKRowDiff)diff_).getSide() == DKSide.LEFT ? lhsData[_writeBackKeyIndex] : rhsData[_writeBackKeyIndex]));
+                    _writeBackDataSource.getDatabase().executeUpdate(_rowDiffWriteBackStatement
+                                .replace("{recordKey}", ((DKRowDiff)diff_).getSide() == DKSide.LEFT ?
+                                        lhsData[_writeBackKeyIndex].toString() : rhsData[_writeBackKeyIndex].toString())
+                                .replace("{diff}", ((DKRowDiff)diff_).getSide() == DKSide.LEFT ? "2" : "1"));
 
                 } else if (diff_.getKind() == DKDiff.Kind.COLUMN_DIFF
                         && _writeBackDataSource != null
                         && StringUtils.isNotEmpty(_columnDiffWriteBackStatement)) {
-                    _writeBackDataSource.getDatabase().executeUpdate(String.format(_columnDiffWriteBackStatement, lhsData[_writeBackKeyIndex]));
+                    _writeBackDataSource.getDatabase().executeUpdate(_columnDiffWriteBackStatement
+                            .replace("{recordKey}", lhsData[_writeBackKeyIndex].toString())
+                            .replace("{diff}", "3"));
                 }
             } catch (SQLException e) {
                 _failedUpdateCount += 1;

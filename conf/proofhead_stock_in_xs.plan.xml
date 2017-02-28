@@ -110,9 +110,9 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="6" value="0" />
 		<constructor-arg index="7" ref="lhs.source" />
 		<constructor-arg index="8" ref="rhs.source" />
-		<constructor-arg index="9" value="UPDATE proc_stock_in_task SET STATUS=3 WHERE TASK_NUMBER='%s'" />
+		<constructor-arg index="9" value="UPDATE proc_stock_in_task SET STATUS=3 WHERE TASK_NUMBER='{recordKey}'" />
 		<constructor-arg index="10" ><null/></constructor-arg>
-		<constructor-arg index="11" value="UPDATE proc_stock_in_task SET STATUS=2 WHERE TASK_NUMBER='%s'" />
+		<constructor-arg index="11" value="UPDATE proc_stock_in_task SET STATUS=2 WHERE TASK_NUMBER='{recordKey}'" />
 		<constructor-arg index="12" ><null/></constructor-arg>
 	</bean>
 
