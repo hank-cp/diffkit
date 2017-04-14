@@ -318,7 +318,7 @@ public class DKDBSource implements DKSource {
       if (orderByColumnNames == null)
          return null;
       StringBuilder builder = new StringBuilder();
-      builder.append("ORDER BY ");
+      builder.append("ORDER BY BINARY ");
       for (int i = 0; i < orderByColumnNames.length; i++) {
          // builder.append(orderByColumnNames[i]);
          builder.append(_database.getSqlGenerator().generateIdentifierString(

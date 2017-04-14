@@ -116,7 +116,7 @@ public class DKCustomDBSink extends DKAbstractCustomDBSink {
             // filter by exclude config
             boolean hit = false;
             for (String key : _excludeConfig.getExcludeKeyList()) {
-                if (getDiffKeyValue(diff_, lhsData, rhsData, context_).startsWith(key)) {
+                if (getDiffKeyValue(diff_, lhsData, rhsData, context_).equals(key)) {
                     hit = true;
                     break;
                 }
