@@ -91,7 +91,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<bean id="column.comparison.spec" class="org.diffkit.diff.engine.DKColumnComparison">
 		<constructor-arg index="0" ref="lhs.column.spec" />
 		<constructor-arg index="1" ref="rhs.column.spec" />
-		<constructor-arg index="2" ref="equalsDiffor" />
+		<constructor-arg index="2" ref="truncationDiffor" />
 	</bean>
 
 	<bean id="column.comparison.unit" class="org.diffkit.diff.engine.DKColumnComparison">
@@ -141,6 +141,10 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<bean id="leagueDiffor" class="org.diffkit.diff.custom.DKLeagueDiffor"
 		  factory-method="getInstance" />
+
+	<bean id="truncationDiffor" class="org.diffkit.diff.diffor.DKTruncationDiffor">
+		<constructor-arg index="0" value="20" />
+	</bean>
 
 	<bean id="sink.db" class="org.diffkit.diff.custom.DKCustomDBSink">
     	<constructor-arg index="0" value="./proofhead.product.diff" />
