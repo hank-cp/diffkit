@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="plan" class="org.diffkit.diff.conf.DKPassthroughPlan">
+		<property name="lhsSource" ref="lhs.source" />
+		<property name="rhsSource" ref="rhs.source" />
+		<property name="sink" ref="sink.db" />
+		<property name="tableComparison" ref="table.comparison" />
+	</bean>
+
+	<bean id="table.comparison" class="org.diffkit.diff.custom.DKCustomTableComparison">
+		<constructor-arg index="0" ref="lhs.table.model" />
+		<constructor-arg index="1" ref="rhs.table.model" />
+		<constructor-arg index="2" value="BOTH" />
+		<constructor-arg index="3">
+			<list>
+				<ref bean="column.comparison.orderCode" />
+				<ref bean="column.comparison.productCode" />
+				<ref bean="column.comparison.count" />
+			</list>
+		</constructor-arg>
+		<constructor-arg index="4">
+			<list>
+				<value>0</value>
+				<value>1</value>
+				<value>2</value>
+			</list>
+		</constructor-arg>
+		<constructor-arg index="5">
+			<list>
+				<list>
+					<value>0</value>
+					<value>1</value>
+					<value>2</value>
+				</list>
+				<list>
+					<value>0</value>
+					<value>1</value>
+					<value>2</value>
+				</list>
+			</list>
+		</constructor-arg>
+		<constructor-arg index="6" value="9223372036854775807" />
+		<!--<constructor-arg index="6" value="100" />-->
+	</bean>
+
+	<bean id="column.comparison.orderCode" class="org.diffkit.diff.engine.DKColumnComparison">
+		<constructor-arg index="0" ref="lhs.column.orderCode" />
+		<constructor-arg index="1" ref="rhs.column.orderCode" />
+		<constructor-arg index="2" ref="equalsDiffor" />
+	</bean>
+
+	<bean id="column.comparison.productCode" class="org.diffkit.diff.engine.DKColumnComparison">
+		<constructor-arg index="0" ref="lhs.column.productCode" />
+		<constructor-arg index="1" ref="rhs.column.productCode" />
+		<constructor-arg index="2" ref="equalsDiffor" />
+	</bean>
+
+	<bean id="column.comparison.count" class="org.diffkit.diff.engine.DKColumnComparison">
+		<constructor-arg index="0" ref="lhs.column.count" />
+		<constructor-arg index="1" ref="rhs.column.count" />
+		<constructor-arg index="2" ref="numberDiffor" />
+	</bean>
+
+
+	<bean id="equalsDiffor" class="org.diffkit.diff.diffor.DKEqualsDiffor"
+		factory-method="getInstance" />
+
+	<bean id="numberDiffor" class="org.diffkit.diff.diffor.DKNumberDiffor"
+		  factory-method="getInstance" />
+
+
+
+	<bean id="sink.db" class="org.diffkit.diff.custom.DKCustomDBSink">
+    	<constructor-arg index="0" value="./proofhead.work.order.task.summary.diff" />
+		<constructor-arg index="1" ref="sinkConnectionSource" />
+		<constructor-arg index="2" ref="table.comparison" />
+		<constructor-arg index="3" value="diff_work_order_task" />
+		<constructor-arg index="4" value="ENGINE=MyISAM" />
+		<constructor-arg index="5" ref="lhs.source" />
+		<constructor-arg index="6" value="0" />
+		<constructor-arg index="7" ref="lhs.source" />
+		<constructor-arg index="8" ref="rhs.source" />
+		<constructor-arg index="9" value="UPDATE wo_work_order_task SET STATUS=4 WHERE TASK_NUMBER='{recordKey}'" />
+		<constructor-arg index="10" ><null/></constructor-arg>
+		<constructor-arg index="11" value="UPDATE wo_work_order_task SET STATUS=5 WHERE TASK_NUMBER='{recordKey}'" />
+		<constructor-arg index="12" ><null/></constructor-arg>
+	</bean>
+
+	<!-- ATS database config -->
+
+	<bean id="lhs.source" class="org.diffkit.diff.sns.DKDBSource">
+		<constructor-arg index="0" value="wo_work_order_task" />
+		<constructor-arg index="1" value="WHERE STATUS NOT IN(0, 1) AND CREATED_DATE > '2017-06-06 00'" />
+		<constructor-arg index="2" ref="atsConnectionSource" />
+		<constructor-arg index="3" ref="lhs.table.model" />
+		<constructor-arg index="4">
+			<list>
+				<value>ORDER_CODE</value>
+			</list>
+		</constructor-arg>
+		<constructor-arg index="5">
+			<null />
+		</constructor-arg>
+	</bean>
+	
+	<bean id="lhs.table.model" class="org.diffkit.diff.engine.DKTableModel">
+        <constructor-arg index="0" value="wo_work_order_task" />
+		<constructor-arg index="1">
+			<list>
+				<ref bean="lhs.column.orderCode" />
+				<ref bean="lhs.column.productCode" />
+				<ref bean="lhs.column.count" />
+			</list>
+		</constructor-arg>
+		<constructor-arg index="2">
+			<list>
+				<value>0</value>
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean id="lhs.column.orderCode" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="0" />
+		<constructor-arg index="1" value="ORDER_CODE" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="lhs.column.productCode" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="1" />
+		<constructor-arg index="1" value="PRODUCT_CODE" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="lhs.column.count" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="2" />
+		<constructor-arg index="1" value="COUNT" />
+		<constructor-arg index="2" value="INTEGER" />
+	</bean>
+
+	<!-- YF database config -->
+
+	<bean id="rhs.source" class="org.diffkit.diff.sns.DKDBSource">
+		<constructor-arg index="0" value="mocta" />
+		<constructor-arg index="1" value="WHERE TA013 NOT IN ('Y', 'y') AND TA002 LIKE 'B%'  AND (CREATE_DATE > '20170606000000000' OR MODI_DATE > '20170606000000000')" />
+		<constructor-arg index="2" ref="yfConnectionSource" />
+		<constructor-arg index="3" ref="rhs.table.model" />
+		<constructor-arg index="4">
+			<list>
+				<value>TA002</value>
+			</list>
+		</constructor-arg>
+		<constructor-arg index="5">
+			<null />
+		</constructor-arg>
+	</bean>
+
+	<bean id="rhs.table.model" class="org.diffkit.diff.engine.DKTableModel">
+        <constructor-arg index="0" value="mocta" />
+		<constructor-arg index="1">
+			<list>
+				<ref bean="rhs.column.orderCode" />
+				<ref bean="rhs.column.productCode" />
+				<ref bean="rhs.column.count" />
+			</list>
+		</constructor-arg>
+		<constructor-arg index="2">
+			<list>
+				<value>0</value>
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean id="rhs.column.orderCode" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="0" />
+		<constructor-arg index="1" value="TA002" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="rhs.column.productCode" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="1" />
+		<constructor-arg index="1" value="TA006" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="rhs.column.count" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="2" />
+		<constructor-arg index="1" value="TA015" />
+		<constructor-arg index="2" value="INTEGER" />
+	</bean>
+
+</beans>
