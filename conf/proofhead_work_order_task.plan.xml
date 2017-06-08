@@ -82,7 +82,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 
 	<bean id="sink.db" class="org.diffkit.diff.custom.DKCustomDBSink">
-    	<constructor-arg index="0" value="./proofhead.work.order.task.summary.diff" />
+    	<constructor-arg index="0" value="./proofhead.work.order.task.diff" />
 		<constructor-arg index="1" ref="sinkConnectionSource" />
 		<constructor-arg index="2" ref="table.comparison" />
 		<constructor-arg index="3" value="diff_work_order_task" />
