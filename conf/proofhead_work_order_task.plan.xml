@@ -36,11 +36,17 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 					<value>0</value>
 					<value>1</value>
 					<value>2</value>
+					<value>3</value>
+					<value>4</value>
+					<value>5</value>
 				</list>
 				<list>
 					<value>0</value>
 					<value>1</value>
 					<value>2</value>
+					<value>3</value>
+					<value>4</value>
+					<value>5</value>
 				</list>
 			</list>
 		</constructor-arg>
@@ -115,6 +121,9 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 				<ref bean="lhs.column.orderCode" />
 				<ref bean="lhs.column.productCode" />
 				<ref bean="lhs.column.count" />
+				<ref bean="lhs.column.productName" />
+				<ref bean="lhs.column.productSpec" />
+				<ref bean="lhs.column.createdDate" />
 			</list>
 		</constructor-arg>
 		<constructor-arg index="2">
@@ -142,6 +151,24 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="2" value="INTEGER" />
 	</bean>
 
+	<bean id="lhs.column.productName" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="3" />
+		<constructor-arg index="1" value="PRODUCT_NAME" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="lhs.column.productSpec" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="4" />
+		<constructor-arg index="1" value="PRODUCT_SPEC" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="lhs.column.createdDate" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="5" />
+		<constructor-arg index="1" value="CREATED_DATE" />
+		<constructor-arg index="2" value="TIME" />
+	</bean>
+
 	<!-- YF database config -->
 
 	<bean id="rhs.source" class="org.diffkit.diff.sns.DKDBSource">
@@ -166,6 +193,9 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 				<ref bean="rhs.column.orderCode" />
 				<ref bean="rhs.column.productCode" />
 				<ref bean="rhs.column.count" />
+				<ref bean="rhs.column.productName" />
+				<ref bean="rhs.column.productSpec" />
+				<ref bean="rhs.column.createdDate" />
 			</list>
 		</constructor-arg>
 		<constructor-arg index="2">
@@ -193,4 +223,21 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="2" value="INTEGER" />
 	</bean>
 
+	<bean id="rhs.column.productName" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="3" />
+		<constructor-arg index="1" value="TA034" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="rhs.column.productSpec" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="4" />
+		<constructor-arg index="1" value="TA035" />
+		<constructor-arg index="2" value="STRING" />
+	</bean>
+
+	<bean id="rhs.column.createdDate" class="org.diffkit.diff.engine.DKColumnModel">
+		<constructor-arg index="0" value="5" />
+		<constructor-arg index="1" value="TA003" />
+		<constructor-arg index="2" value="TIME" />
+	</bean>
 </beans>
