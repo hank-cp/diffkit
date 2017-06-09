@@ -173,7 +173,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<bean id="rhs.source" class="org.diffkit.diff.sns.DKDBSource">
 		<constructor-arg index="0" value="mocta" />
-		<constructor-arg index="1" value="WHERE TA013 NOT IN ('Y', 'y') AND TA002 LIKE 'B%'  AND (CREATE_DATE > '20170606000000000' OR MODI_DATE > '20170606000000000')" />
+		<constructor-arg index="1" value="WHERE TA013 = 'Y' AND TA002 LIKE 'B%'  AND (CREATE_DATE > '20170606000000000' OR MODI_DATE > '20170606000000000')" />
 		<constructor-arg index="2" ref="yfConnectionSource" />
 		<constructor-arg index="3" ref="rhs.table.model" />
 		<constructor-arg index="4">
