@@ -134,7 +134,8 @@ public class DKAbstractCustomDBSink extends DKAbstractSink {
             if (_writeBackDataSource != null && StringUtils.isNotEmpty(_rowConsistenceWriteBackStatement)) {
                 _writeBackDataSource.getDatabase().executeUpdate(
                         _rowConsistenceWriteBackStatement
-                                .replace("{recordKey}", lhsData[_writeBackKeyIndex].toString())
+                                .replace("{recordKey}",
+                                        Optional.ofNullable(lhsData).orElse(rhsData)[_writeBackKeyIndex].toString())
                                 .replace("{diff}", "0"));
             }
         } catch (SQLException e) {

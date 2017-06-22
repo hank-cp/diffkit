@@ -136,7 +136,13 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		<constructor-arg index="9" value="UPDATE po_end_product p INNER JOIN po_product_order o ON p.PRODUCT_ORDER_ID = o.ID SET ERP_ENTERING_STATUS={diff} WHERE CONCAT(o.CODE, '∆', p.CODE, '∆', p.SEQ)='{recordKey}'" />
 		<constructor-arg index="10" value="UPDATE po_end_product p INNER JOIN po_product_order o ON p.PRODUCT_ORDER_ID = o.ID SET ERP_ENTERING_STATUS={diff} WHERE CONCAT(o.CODE, '∆', p.CODE, '∆', p.SEQ)='{recordKey}'"/>
 		<constructor-arg index="11" value="UPDATE po_end_product p INNER JOIN po_product_order o ON p.PRODUCT_ORDER_ID = o.ID SET ERP_ENTERING_STATUS={diff} WHERE CONCAT(o.CODE, '∆', p.CODE, '∆', p.SEQ)='{recordKey}'" />
-		<constructor-arg index="12" ><null/></constructor-arg>
+		<constructor-arg index="12" ref="exclude.config" />
+	</bean>
+
+	<bean id="exclude.config" class="org.diffkit.diff.custom.DKDBExcludeConfig">
+		<constructor-arg index="0" ref="atsConnectionSource" />
+		<constructor-arg index="1" value="po_proofhead_end_product_white_list" />
+		<constructor-arg index="2" value="VIEW_KEY" />
 	</bean>
 
 	<!-- ATS database config -->
