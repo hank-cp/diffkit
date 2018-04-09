@@ -53,10 +53,15 @@ public class DKTruncationDiffor implements DKDiffor {
       if (lhsNull || rhsNull)
          return true;
       String lhsStr = lhs_.toString();
-      lhsStr = lhsStr.length() < 20 ? lhsStr : lhsStr.substring(0, length);
       String rhsStr = rhs_.toString();
-      rhsStr = rhsStr.length() < 20 ? rhsStr : rhsStr.substring(0, length);
-      return !lhsStr.equals(rhsStr);
+      if (lhsStr.equals(rhsStr)) return true;
+
+      if (lhsStr.length() > rhsStr.length()) {
+         return !lhsStr.startsWith(rhsStr);
+      } else if (lhsStr.length() < rhsStr.length()) {
+         return !rhsStr.startsWith(lhsStr);
+      }
+      return false;
    }
 
    public String toString() {

@@ -85,7 +85,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<bean id="column.comparison.name" class="org.diffkit.diff.engine.DKColumnComparison">
 		<constructor-arg index="0" ref="lhs.column.name" />
 		<constructor-arg index="1" ref="rhs.column.name" />
-		<constructor-arg index="2" ref="equalsDiffor" />
+		<constructor-arg index="2" ref="truncationDiffor" />
 	</bean>
 
 	<bean id="column.comparison.spec" class="org.diffkit.diff.engine.DKColumnComparison">
